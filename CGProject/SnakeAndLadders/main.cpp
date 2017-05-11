@@ -3,11 +3,12 @@
 #else
 #include <GL/glut.h>
 #endif
-
 #include <stdlib.h>
+#include "lodepng/lodepng.h"
+#include "lodepng/lodepng.cpp"
 
-static int slices = 3;
-static int stacks = 3;
+static int slices = 20;
+static int stacks = 20;
 
 /* GLUT callback Handlers */
 
@@ -24,7 +25,7 @@ static void resize(int width, int height)
     glLoadIdentity() ;
 }
 
-static void display(void)
+static void displaysphere(void)
 {
     const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
     const double a = t*90.0;
@@ -36,7 +37,7 @@ static void display(void)
         glTranslated(-2.4,1.2,-6);
         glRotated(60,1,0,0);
         glRotated(a,0,0,1);
-        glutSolidSphere(1,slices,stacks);
+        glutSolidSphere(0.1,slices,stacks);
     glPopMatrix();
 
     glutSwapBuffers();
@@ -94,9 +95,9 @@ int main(int argc, char *argv[])
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 
     glutCreateWindow("GLUT Shapes");
-
+    glutFullScreen();
     glutReshapeFunc(resize);
-    glutDisplayFunc(display);
+    glutDisplayFunc(displaysphere);
     glutKeyboardFunc(key);
     glutIdleFunc(idle);
 
