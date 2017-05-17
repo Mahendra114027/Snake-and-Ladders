@@ -1,129 +1,132 @@
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
+#include <stdio.h>
 #include <GL/glut.h>
-#endif
-#include <stdlib.h>
-#include "lodepng/lodepng.h"
-#include "lodepng/lodepng.cpp"
+#define SIZE 512
 
-static int slices = 20;
-static int stacks = 20;
+static int boxspace=200;
+int windowWidth=GLUT_SCREEN_WIDTH;
+int windowHeight=GLUT_SCREEN_HEIGHT;
+int x1=(int)(windowWidth-900)/2,x2=x1+130;
 
-/* GLUT callback Handlers */
+// function prototypes
+static void displayFunction(void);
+static void ResizeFunction(int, int);
+static void mouseButton(int, int, int, int);
 
-static void resize(int width, int height)
+void draw(GLenum mode=GL_RENDER)
 {
-    const float ar = (float) width / (float) height;
+    glLoadName(1);
+    glColor3f(1.0,0.0,0.0);
+    glRectf(125, 50, 230, 120);
 
-    glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-ar, ar, -1.0, 1.0, 2.0, 100.0);
+    glLoadName(2);
+    glColor3f(0.0,1.0,0.0);
+    glRectf(125+boxspace, 50, 230+boxspace, 120);
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity() ;
+    glLoadName(3);
+    glColor3f(0.0,0.0,1.0);
+    glRectf(125+boxspace+boxspace, 50, 230+boxspace+boxspace, 120);
 }
-
-static void displaysphere(void)
-{
-    const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-    const double a = t*90.0;
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glColor3d(1,0,0);
-
-    glPushMatrix();
-        glTranslated(-2.4,1.2,-6);
-        glRotated(60,1,0,0);
-        glRotated(a,0,0,1);
-        glutSolidSphere(0.1,slices,stacks);
-    glPopMatrix();
-
-    glutSwapBuffers();
-}
-
-
-static void key(unsigned char key, int x, int y)
-{
-    switch (key)
-    {
-        case 27 :
-        case 'q':
-            exit(0);
-            break;
-
-        case '+':
-            slices++;
-            stacks++;
-            break;
-
-        case '-':
-            if (slices>3 && stacks>3)
-            {
-                slices--;
-                stacks--;
-            }
-            break;
-    }
-
-    glutPostRedisplay();
-}
-
-static void idle(void)
-{
-    glutPostRedisplay();
-}
-
-const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
-
-const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
-const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
-const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat high_shininess[] = { 100.0f };
-
-/* Program entry point */
 
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    glutInitWindowSize(640,480);
-    glutInitWindowPosition(10,10);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
 
-    glutCreateWindow("GLUT Shapes");
-    glutFullScreen();
-    glutReshapeFunc(resize);
-    glutDisplayFunc(displaysphere);
-    glutKeyboardFunc(key);
-    glutIdleFunc(idle);
-
-    glClearColor(1,1,1,1);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    glEnable(GL_LIGHT0);
-    glEnable(GL_NORMALIZE);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_LIGHTING);
-
-    glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-    glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-
+    glutInitWindowSize(windowWidth,windowHeight);
+    glutInitWindowPosition(0,0);
+    glutInitWindowSize(500,500);
+    glutCreateWindow("Snake and Ladders");
+    glutReshapeFunc(ResizeFunction);
+    glutMouseFunc(mouseButton);
+    glutDisplayFunc(displayFunction);
+    glClearColor((23.0/255),(32.0/255),(42.0/255),0);
+    gluOrtho2D(0,windowWidth,0,windowHeight);
     glutMainLoop();
 
-    return EXIT_SUCCESS;
+    return 0;
+}
+
+static void displayFunction()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    draw();
+    glutSwapBuffers();
+}
+
+static void ResizeFunction(int width, int height)
+{
+    //////////////////////////////////////////////////////
+    ////// NEVER DELETE THIS SECTION - SINCE OBJECT //////
+    ////// SELECTION DOESN'T WORK !!!!!!!!!!!!!!!!! //////
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D (0, 800, 0, 600);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    /////////////////////////////////////////////////////
+}
+
+// this function is used to detect which object is hit,
+void processHits (GLint hits, GLuint buffer[])
+{
+   unsigned int i, j;
+   GLuint names, *ptr;
+   if(hits == 0)
+        printf("No square is hit & ");
+   ptr = (GLuint *) buffer;
+   for (i = 0; i < hits; i++)
+   {
+      names = *ptr;
+      ptr+=3;
+      for (j = 0; j < names; j++)
+      {
+        if(*ptr == 1)
+            printf("Red square is hit & ");
+        else if(*ptr == 2)
+            printf("Green square is hit & ");
+        else if(*ptr == 3)
+            printf("Blue square is hit & ");
+        ptr++;
+      }
+   }
+   printf("\n");
+}
+
+static void mouseButton(int button, int state, int x, int y)
+{
+    GLuint selectBuf[SIZE];
+    GLint hits;
+    GLint viewport[4];
+
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        glGetIntegerv (GL_VIEWPORT, viewport);
+
+        glSelectBuffer (SIZE, selectBuf);
+        glRenderMode(GL_SELECT);
+
+        glInitNames();
+        glPushName(0);
+
+        glMatrixMode (GL_PROJECTION);
+        glPushMatrix ();
+        glLoadIdentity ();
+        /* create 5x5 pixel picking region near cursor location */
+        gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y),
+                      5.0, 5.0, viewport);
+        gluOrtho2D (0, windowWidth, 0, windowHeight);
+        draw(GL_SELECT);
+
+
+        glMatrixMode (GL_PROJECTION);
+        glPopMatrix ();
+        glFlush ();
+
+        hits = glRenderMode (GL_RENDER);
+        processHits (hits, selectBuf);
+
+        glutPostRedisplay();
+        glutSwapBuffers();
+    }
 }
