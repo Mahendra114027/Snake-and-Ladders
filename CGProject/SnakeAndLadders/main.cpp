@@ -185,11 +185,11 @@ void specialkeys(int key,int x,int y)
 
 void myKey(unsigned char key,int x,int y)
 {
-    if(key=='q'||key=='Q')
+    if(key=='q' || key=='Q' || key==27)
     {
         exit(1);
     }
-    else if(key=='p'||key=='P')
+    else if(key==13||key=='p')
     {
         windowseq=true;
     }
