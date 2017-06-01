@@ -8,6 +8,8 @@
 
 using namespace std;
 
+int numplayers=0;
+bool windowseq=false;
 int windowWidth;
 int windowHeight;
 int flag=0;
@@ -15,6 +17,21 @@ int flag=0;
 static void displayFunction(void);
 static void ResizeFunction(int, int);
 
+void drawStrokeText(char str[250],int x,int y,int z,float p1,float p2)
+{
+      int i;
+	 glPushMatrix();
+	 glTranslatef(x, y,z);
+	 glScalef(p1,p2,z);
+
+	 for (i=0;str[i]!='\0';i++)
+	 {
+    		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN , str[i]);
+	 }
+	 glPopMatrix();
+}
+
+//Creating Player Box
 void draw(GLenum mode=GL_RENDER)
 {
     float cn=windowWidth/2;
@@ -28,9 +45,18 @@ void draw(GLenum mode=GL_RENDER)
     glRectf(cn+200,70,cn+350,150);
 }
 
+//Selecting the player box
 void redraw(GLenum mode=GL_RENDER)
 {
     float cn=windowWidth/2;
+    float fontsize=0.13;
+
+    //Text for Player Selection buttons
+    glColor3f(1.0,1.0,1.0);
+    drawStrokeText("2 Players",cn-335.0,100.0,0.0,fontsize,fontsize);
+    drawStrokeText("3 Players",cn-60.0,100.0,0.0,fontsize,fontsize);
+    drawStrokeText("4 Players",cn+215.0,100.0,0.0,fontsize,fontsize);
+
     if(flag==0)
     {
         glColor3f(1.0,1.0,1.0);
@@ -152,12 +178,25 @@ void specialkeys(int key,int x,int y)
         if(flag<0)
             flag=2;
     }
+    numplayers=flag+2;
+         printf("nop:%d\n",numplayers);
+    printf("flag:%d\n",flag);
+}
 
-    printf("%d\n",flag);
+void myKey(unsigned char key,int x,int y)
+{
+    if(key=='q'||key=='Q')
+    {
+        exit(1);
+    }
+    else if(key=='p'||key=='P')
+    {
+        windowseq=true;
+    }
 }
 
 
-static void displayFunction()
+void homepage()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     draw();
@@ -179,6 +218,39 @@ static void displayFunction()
     //image end
     glPopMatrix();
     glutSwapBuffers();
+}
+
+void gamepage()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.150, 0.200, 0.400,0.0);
+    glLineWidth(3.0);
+    glColor3f(1.0,1.0,1.0);
+    drawStrokeText("2048 - The Game",70,250,0,0.20,0.20);
+    glLineWidth(1.0);
+    glColor3f(0.698, 0.133, 0.133);
+    glLineWidth(2.0);
+    drawStrokeText("RULES:",20,200,0,0.12,0.12);
+    glColor3f(0.0,0.8,1.0);
+    glLineWidth(1.0);
+    drawStrokeText("1. Objective of the game is to get the number 2048.",20,180,0,0.08,0.08);
+    drawStrokeText("2. You will have a grid of 16 tiles.",20,160,0,0.08,0.08);
+    drawStrokeText("3. Move using arrow keys to join two equal numbers.",20,140,0,0.09,0.08);
+    drawStrokeText("4. When two equal numbers are in touch, they will add up.",20,120,0,0.08,0.08);
+    drawStrokeText("5. If there are no free tiles on our grid, the game ends.",20,100,0,0.08,0.08);
+    glColor3f(1.000, 0.843, 0.000);
+    drawStrokeText("Press P to Play.                  Press Q to Quit.",20,60,0,0.08,0.08);
+    glFlush();
+    glutSwapBuffers();
+}
+
+
+static void displayFunction()
+{
+    if(!windowseq)
+        homepage();
+    else
+        gamepage();
 }
 
 static void ResizeFunction(int width, int height)
@@ -215,14 +287,16 @@ int main(int argc, char *argv[])
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
+    glEnable(GL_LINE_SMOOTH);
 
     glutInitWindowSize(windowWidth,windowHeight);
     glutInitWindowPosition(0,0);
     myinit();
-    glutCreateWindow("Snake and Ladders");
+    glutCreateWindow("Snakes and Ladders");
     glutFullScreen();
 
     glutSpecialFunc(specialkeys);
+    glutKeyboardFunc(myKey);
     glutReshapeFunc(ResizeFunction);
     glutIdleFunc(myidle);
     glutDisplayFunc(displayFunction);
