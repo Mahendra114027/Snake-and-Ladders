@@ -9,10 +9,10 @@
 using namespace std;
 
 int numplayers=0;
-bool windowseq=false;
 int windowWidth;
 int windowHeight;
 int flag=0;
+bool window2=false,window3=false,window4=false;
 
 static void displayFunction(void);
 static void ResizeFunction(int, int);
@@ -189,14 +189,18 @@ void myKey(unsigned char key,int x,int y)
     {
         exit(1);
     }
-    else if(key==13||key=='p')
+    else if(key==13)
     {
-        windowseq=true;
+        window2=true;
+    }
+    else if(key=='p' || key=='P')
+    {
+        window3=true;
     }
 }
 
 
-void homepage()
+void windowOne()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     draw();
@@ -220,17 +224,21 @@ void homepage()
     glutSwapBuffers();
 }
 
-void gamepage()
+void windowTwo()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.150, 0.200, 0.400,0.0);
-    glLineWidth(3.0);
+    float xpos=windowWidth/5;
+    float ypos=windowHeight*3/4;
+
+    glLineWidth(4.0);
     glColor3f(1.0,1.0,1.0);
-    drawStrokeText("Welcome to kucho - The Game",70,250,0,0.20,0.20);
-    glLineWidth(1.0);
+    drawStrokeText("Snake and Ladders - The Game of Chance",xpos,ypos,0,0.20,0.20);
+
     glColor3f(0.698, 0.133, 0.133);
     glLineWidth(2.0);
     drawStrokeText("RULES:",20,200,0,0.12,0.12);
+
     glColor3f(0.0,0.8,1.0);
     glLineWidth(1.0);
     drawStrokeText("1. Objective of the game is to get the number 2048.",20,180,0,0.08,0.08);
@@ -244,13 +252,34 @@ void gamepage()
     glutSwapBuffers();
 }
 
+void windowThree()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.150, 0.200, 0.400,0.0);
+    float xpos=windowWidth/5;
+    float ypos=windowHeight*3/4;
+
+    glLineWidth(4.0);
+    glColor3f(1.0,1.0,1.0);
+    drawStrokeText("Snake and Ladders - The Game of Chance",xpos,ypos,0,0.20,0.20);
+
+    glColor3f(0.698, 0.133, 0.133);
+    glLineWidth(2.0);
+    drawStrokeText("RULES:",20,200,0,0.12,0.12);
+
+    glFlush();
+    glutSwapBuffers();
+}
+
 
 static void displayFunction()
 {
-    if(!windowseq)
-        homepage();
+    if(!window2)
+        windowOne();
+    else if(!window3)
+        windowTwo();
     else
-        gamepage();
+        windowThree();
 }
 
 static void ResizeFunction(int width, int height)
