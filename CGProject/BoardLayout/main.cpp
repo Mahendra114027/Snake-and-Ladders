@@ -99,6 +99,7 @@ void leftclick()
     glutIdleFunc(spindDisplay);
     if(p1flag==1)
     {
+        printf("\nPlayer1\n");
         dice1=gennum();
         printf("%d\n",dice1);
         if((p1sum+dice1)>100)
@@ -122,6 +123,7 @@ void leftclick()
     }
     if(p2flag==1)
     {
+        printf("\nPlayer2\n");
         dice2=gennum();
         printf("%d\n\n",dice2);
         if((p2sum+dice2)>100)
