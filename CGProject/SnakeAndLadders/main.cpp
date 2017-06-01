@@ -226,7 +226,7 @@ void gamepage()
     glClearColor(0.150, 0.200, 0.400,0.0);
     glLineWidth(3.0);
     glColor3f(1.0,1.0,1.0);
-    drawStrokeText("2048 - The Game",70,250,0,0.20,0.20);
+    drawStrokeText("Welcome to kucho - The Game",70,250,0,0.20,0.20);
     glLineWidth(1.0);
     glColor3f(0.698, 0.133, 0.133);
     glLineWidth(2.0);

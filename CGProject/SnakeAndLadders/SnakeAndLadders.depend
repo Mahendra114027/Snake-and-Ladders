@@ -1,10 +1,16 @@
 # depslib dependency file v1.0
-1496283363 source:e:\#projects\github\snake-and-ladders\cgproject\snakeandladders\main.cpp
+1496327259 source:e:\#projects\github\snake-and-ladders\cgproject\snakeandladders\main.cpp
+	<cmath>
+	<GLUT/glut.h>
+	<GLUT/glext.h>
+	<GL/glut.h>
+	<GL/glext.h>
+	<stdio.h>
 	<stdlib.h>
 	<iostream>
-	<stdio.h>
-	<cmath>
-	<GL/glut.h>
+	<vector>
+	"lodepng/lodepng.h"
+	"lodepng/lodepng.cpp"
 
 1426329928 c:\program files (x86)\codeblocks\mingw\include\gl\glut.h
 	"freeglut_std.h"
