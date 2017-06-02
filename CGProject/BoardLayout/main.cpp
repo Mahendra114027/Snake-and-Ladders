@@ -1,341 +1,188 @@
 #ifdef __APPLE__
 #include <GLUT/glut.h>
+#include <GLUT/glext.h>
 #else
 #include <GL/glut.h>
+#include <GL/glext.h>
 #endif
 
-#include <stdlib.h>
-#include<iostream>
 #include<stdio.h>
-#include<cmath>
+#include <stdlib.h>
+#include <iostream>
+#include <vector>
+#include "lodepng.h"
+#include "lodepng.cpp"
+#include<math.h>
+
+int rt1,up1,rt2,up2,d=5;
 
 using namespace std;
+void drawmesh();
+int pixelwidth=700,pixelheight=850;
+int WIDTH=500; // window width & height
+int HEIGHT=500;
+vector <unsigned char> image; // storage for image(pixel array)
+unsigned imageWidth;  // image width and height
+unsigned imageHeight;
+GLuint texname;
+float scale=1.0;
+float dx=0.0,dy=0.0;
+/** Sets current texture to given image
+    @param img is image vector that has already been loaded
+    @param width is width of the image
+    @param height is height of image
+*/
 
-int rt1,up1,rt2=0,up2=0;
-float spin;
-float b=2.5;
-int p1sum=0;
-int p2sum=0;
-float d=5;     //cuboid width/2
-float deg=30.0;
-float x[10],y[10];
-
-int dice1,dice2;
-int p1flag=1;
-int p2flag=0;
-int windowWidth,windowHeight;
-/* GLUT callback Handlers */
-int angleX=0,angleY=0,angleZ=0;
-void *currentfont;
-
-//String Display Begin
-void setFont(void *font) //function to change the font of the text
+void drawMesh()
 {
-    currentfont = font;
-}
-void drawstring(float x, float y, float z, char *str)//To render the text on the screen
-{
-    char *c;
-    glRasterPos3f(x, y, z);
-
-    for (c = str;*c != '\0';c++)
-    glutBitmapCharacter(currentfont, *c);
-}
-
- void renderBitmapString(float x, float y,float z, void *font, char *string)
-{
-  char *c;
-  glRasterPos3f(x,y,z);
-  for (c=string; *c != '\0'; c++)
-  {
-    glutBitmapCharacter(font, *c);
-  }
-}
-//String Display End
-
-void reshape(int w, int h)
-{
-    glViewport(0, 0, windowWidth, windowHeight);
-    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45,(float)w/(float)h, 1, 100);
-    glutReshapeWindow(windowWidth,windowHeight);
-    glMatrixMode(GL_MODELVIEW);
-
-}
-
-void spindDisplay()
-{
-  spin = spin+3.0;
-  if (spin > 360)
-  spin = spin -359;
-  glutPostRedisplay();
-}
-
-void keyboard(unsigned char key, int x, int y)
-{
-    switch(key)
-    {
-        case 'q'    :   exit(0);
-                        break;
-    }
-  glutPostRedisplay();
-}
-
-int gennum()
-{
-    int chancenum=rand()%6,dicenum;
-
-    if(chancenum==0)
-        dicenum=gennum();
-    else
-        dicenum=chancenum;
-    printf("dicenum:%d\n",dicenum);
-    return dicenum;
-}
-
-void leftclick()
-{
-    glutIdleFunc(spindDisplay);
-    if(p1flag==1)
-    {
-        printf("\nPlayer1\n");
-        dice1=gennum();
-        printf("%d\n",dice1);
-        if((p1sum+dice1)>100)
-            dice1=0;
-        p1sum+=dice1;
-        printf("\nsum%d\n",p1sum);
-
-        if(!(p1sum%10==0))
-        {
-            rt1=(p1sum%10);
-            up1=(p1sum/10);
-        }
-        else
-        {
-            rt1=9;
-            up1=(p1sum/10)-1;
-        }
-
-        p2flag=1;
-        p1flag=0;
-    }
-    if(p2flag==1)
-    {
-        printf("\nPlayer2\n");
-        dice2=gennum();
-        printf("%d\n\n",dice2);
-        if((p2sum+dice2)>100)
-            dice2=0;
-        p2sum+=dice2;
-        printf("\nsum%d\n",p2sum);
-        if(!(p2sum%10==0))
-        {
-            rt2=(p2sum%10);
-            up2=(p2sum/10);
-        }
-        else
-        {
-            rt2=9;
-            up2=(p2sum/10)-1;
-        }
-        p1flag=1;
-        p2flag=0;
-    }
-}
-
-void rightclick()
-{
-    glutIdleFunc(NULL);
-    if(p1flag==1)
-    {
-
-     }
-     else
-    {
-
-     }
-}
-
-void mouse (int button, int state, int x, int y)
-{
-
-    if(state == GLUT_DOWN)
-    {
-        switch(button)
-        {
-            case GLUT_LEFT_BUTTON   :   leftclick();
-                                        break;
-
-            case GLUT_RIGHT_BUTTON  :   rightclick();
-                                        break;
-
-            default                 :   break;
-        }
-    }
-}
-
-void drawSquare(int x,int y,int z)
-{
-    int num=30;
-    glBegin(GL_POLYGON);
-        glVertex3f(x-num,y+num,z);
-        glVertex3f(x+num,y+num,z);
-        glVertex3f(x+num,y-num,z);
-        glVertex3f(x-num,y-num,z);
-    glEnd();
-}
-void drawDice()
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-    glTranslatef(30,0,-50.0);  //Translation motion along(x,y,z) axis
-    //rotation after translation (order matters)
-    glRotatef( angleX, 1.0, 0.0, 0.0);      //rotate the cube along x-axis
-    glRotatef( angleY, 0.0, 1.0, 0.0);      //rotate along y-axis
-    glRotatef( angleZ, 0.0, 0.0, 1.0);
+    glPushMatrix();
+    glTranslatef(31,81,-50.0);  //not to delete
     glPointSize(10.0);
-    glTranslatef(-40,-5,-15.0);  //Translation motion along(x,y,z) axis
 
-    int num = 1;
-    //int swap;
-    for(int j=0;j<10;j++)
-        for(int i=0;i<10;i++)
+    for(int i=0;i<pixelwidth;i+=70)
+        for(int j=0;j<pixelheight;j+=85)
         {
-            /*if(num>=11 && num<=30)
-            {
-                swap=i;i=j;j=swap;
-            }*/
-
-            glColor3f(1.0,0,0);
-            char buffer[10]={'\0'};
-            sprintf(buffer, "%d", num);
-            renderBitmapString(i+0.5, j+0.5, 50, GLUT_BITMAP_HELVETICA_18, buffer);
-
             glPointSize(4.0);
+            glColor3f(1.0,0.0,0.0);
             glBegin(GL_LINE_LOOP);
-            glColor3f(0.0,0.0,0.0);
                 glVertex3f(i,j,50);
-                glVertex3f(i,j+1,50);
-                glVertex3f(i+1,j+1,50);
-                glVertex3f(i+1,j,50);
+                glVertex3f(i,j+85,50);
+                glVertex3f(i+70,j+85,50);
+                glVertex3f(i+70,j,50);
             glEnd();
-
-            num++;
-
         }
-
-        glPointSize(20.0);
-        glColor3f(0.0,0.0,1.0);
-        glBegin(GL_POLYGON);
-            int x=0,y=0,pi=3.14;
-            float th=0,r=0.3;
-            for(int i=0;i<360;i++)
-            {
-                glVertex3f((r*cos((pi/(float)180)*th))+0.4+rt1,(r*sin((pi/(float)180)*th))+0.5+up1,50);
-                th=th+1;
-            }
-        glEnd();
-
-        glColor3f(1.0,0.0,1.0);
-        glBegin(GL_POLYGON);
-            for(int i=0;i<360;i++)
-            {
-                glVertex3f((r*cos((pi/(float)180)*th))+0.6+rt2,(r*sin((pi/(float)180)*th))+0.5+up2,50);
-                th=th+1;
-            }
-        glEnd();
-
-        glTranslatef(40.0,0.0,0.0);
-        glRotatef(spin, 1.0, 0.5, 1.0);
-
-        //Dice Faces
-        glColor3f(1,0,1);
-        float deg=0.0;
-        glBegin(GL_QUADS);
-
-            //top
-            glColor3f(1,0,1);
-            glVertex3f(-d,d,+d); //-x,y,z
-            glVertex3f(d,d,+d); //x,y,z
-            glVertex3f(d,d,-d); //x,y,-z
-            glVertex3f(-d,d,-d); //-x,y,-z
-
-            //bottom
-            glColor3f(1,0,0);
-            glVertex3f(-d,-d,d); //-x,y=0,z
-            glVertex3f(d,-d,d); //x,y=0,z
-            glVertex3f(d,-d,-d); //x,y=0,-z
-            glVertex3f(-d,-d,-d); //-x,y=0,-z
-
-            //left
-            glColor3f(0,1,0);
-            glVertex3f(-d,-d,d); //-x,y=0,z
-            glVertex3f(-d,-d,-d); //-x,y=0,-z
-            glVertex3f(-d,d,-d); //-x,y,-z
-            glVertex3f(-d,d,d); //-x,y,z
-
-            //right
-            glColor3f(1,1,0);
-            glVertex3f(d,-d,d); //x,y=0,z
-            glVertex3f(d,-d,-d); //x,y=0,-z
-            glVertex3f(d,d,-d); //x,y,-z
-            glVertex3f(d,d,d); //x,y,z
-
-            //front
-            glColor3f(0,1,1);
-            glVertex3f(d,-d,d); //x,y=0,z
-            glVertex3f(d,d,d); //x,y,z
-            glVertex3f(-d,d,d); //-x,y,z
-            glVertex3f(-d,-d,d); //-x,y=0,z
-
-            //back
-            glColor3f(0,0,1);
-            glVertex3f(d,-d,-d); //x,y=0,z
-            glVertex3f(d,d,-d); //x,y,z
-            glVertex3f(-d,d,-d); //-x,y,z
-            glVertex3f(-d,-d,-d); //-x,y=0,z
-
-        glEnd();
-
-        deg+=5.625;
 }
 
-void display(void)
+
+
+void setTexture(vector<unsigned char> img, unsigned width, unsigned height)
 {
-    drawDice();
-    glutSwapBuffers();
+    glGenTextures(1, &texname);
+    glBindTexture(GL_TEXTURE_2D, texname);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    // without this texture darkens
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+                0, GL_RGBA, GL_UNSIGNED_BYTE, &img[0]);
+}
+/** OpenGL seems to draw images vertically flipped
+        this function inverts our data so that it displays correctly
+        @param img is our image data vector
+        @param width is our image width
+        @param height is our image height
+*/
+void invert(vector<unsigned char> &img,const unsigned width,const unsigned height)
+{
+    unsigned char *imageptr = &img[0];
+    unsigned char *first = NULL;
+    unsigned char *last = NULL;
+    unsigned char temp = 0;
+    for( int h = 0; h <(int) height/2; ++h )
+    {
+
+        first = imageptr + h * width * 4;
+        last = imageptr + (height - h - 1) * width*4;
+        for( int i = 0; i < (int)width*4; ++i )
+        {
+            temp = *first;
+            *first = *last;
+            *last = temp;
+            ++first;
+            ++last;
+        }
+    }
+}
+/**
+Load image into memory
+*/
+void loadImage(const char* name)
+{
+    //use lodepng decode to decode image
+    int error;
+    if((error=lodepng::decode(image,imageWidth,imageHeight,name)))
+    {
+        cout<<name<<":"<<lodepng_error_text(error)<<endl;
+        exit(1);
+    }
+    else
+        invert(image,imageWidth,imageHeight);
+
 }
 
 void init()
 {
-    glClearColor(1.0,1.0,1.0,1.0);
-    glEnable(GL_DEPTH_TEST);  //enables DEPTH_TEST
-    glDepthFunc(GL_LEQUAL);   //Lesser depth & EQUAL depth valued objects displayed in the front
-    glPointSize(5.0);
-    glOrtho(0,windowWidth,0,windowHeight,-50,50);
+    glClearColor(0,0,0,0);
+    glViewport(0, 0,WIDTH, HEIGHT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0,1000,0,1000,0,1000);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity() ;
+}
+static void display(void)
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearColor(1.0,1.0,1.0,1.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glEnable(GL_TEXTURE_2D);
+    setTexture(image,imageWidth,imageHeight);
+    glPushMatrix();
+    //glTranslatef(WIDTH/2.0-(imageWidth*scale/2.0)+dx-160.0,HEIGHT/2.0-(imageHeight*scale/2.0)+dy-5.0,0);
+    glTranslatef(30,80,0);
+    glScalef(scale,scale,1);
+    glBegin(GL_POLYGON);
+        glTexCoord2d(0,0);  glVertex2f(0,0);
+        glTexCoord2d(0,1);  glVertex2f(0,pixelheight);
+        glTexCoord2d(1,1);  glVertex2f(pixelwidth,pixelheight);
+        glTexCoord2d(1,0);  glVertex2f(pixelwidth,0);
+    glEnd();
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+    drawMesh();
+    glutSwapBuffers();
+}
+
+static void key(unsigned char key,int x,int y)
+{
+    switch(key)
+    {
+    case 27:
+        exit(0);
+        break;
+    case 'q':
+        exit(0);
+        break;
+    }
+}
+
+static void idle(void)
+{
+    glutPostRedisplay();
 }
 int main(int argc, char *argv[])
 {
-    for(int i=0;i<=10;i+=1)        x[i]=100+100*i;
-    for(int j=0;j<=10;j+=1)        y[j]=100+100*j;
-
+    //load image to memory
+    loadImage("board.png");
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-
-    windowWidth = glutGet(GLUT_SCREEN_WIDTH);
-    windowHeight = glutGet(GLUT_SCREEN_HEIGHT);
-    glutInitWindowSize(500,500);
-    glutInitWindowPosition(0,0);
-    glutCreateWindow("snake & ladder");
-    glutFullScreen();
-
+    glutInitWindowSize(WIDTH,HEIGHT);
+    glutInitWindowPosition(10,10);
+    glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE);
+    glutCreateWindow("Snake and Ladders");
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
     init();
+
+    glutFullScreen();
     glutDisplayFunc(display);
-    glutReshapeFunc(reshape);
-    glutKeyboardFunc(keyboard);
-    glutMouseFunc(mouse);
+    glutKeyboardFunc(key);
+    glutIdleFunc(idle);
     glutMainLoop();
-    return 0;
+    return EXIT_SUCCESS;
 }
