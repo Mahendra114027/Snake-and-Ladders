@@ -233,11 +233,11 @@ void windowTwo()
 
     glLineWidth(4.0);
     glColor3f(1.0,1.0,1.0);
-    drawStrokeText("Snake and Ladders - The Game of Chance",xpos,ypos,0,0.20,0.20);
+    drawStrokeText("Snake and Ladders - The Game of Chance",xpos,ypos,0,0.210,0.210);
 
     glColor3f(0.698, 0.133, 0.133);
     glLineWidth(2.0);
-    drawStrokeText("RULES:",20,200,0,0.12,0.12);
+    drawStrokeText("RULES:",xpos*2.5-15,ypos-90,0,0.17,0.17);
 
     glColor3f(0.0,0.8,1.0);
     glLineWidth(1.0);
@@ -262,11 +262,6 @@ void windowThree()
     glLineWidth(4.0);
     glColor3f(1.0,1.0,1.0);
     drawStrokeText("Snake and Ladders - The Game of Chance",xpos,ypos,0,0.20,0.20);
-
-    glColor3f(0.698, 0.133, 0.133);
-    glLineWidth(2.0);
-    drawStrokeText("RULES:",20,200,0,0.12,0.12);
-
     glFlush();
     glutSwapBuffers();
 }

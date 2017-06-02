@@ -25,7 +25,6 @@ vector <unsigned char> image; // storage for image(pixel array)
 unsigned imageWidth;  // image width and height
 unsigned imageHeight;
 GLuint texname;
-float scale=1.0;
 float dx=0.0,dy=0.0;
 /** Sets current texture to given image
     @param img is image vector that has already been loaded
@@ -39,7 +38,7 @@ void drawMesh()
     glPushMatrix();
     glTranslatef(31,81,-50.0);  //not to delete
     glPointSize(10.0);
-
+    glScalef(0.9,1,1);
     for(int i=0;i<pixelwidth;i+=70)
         for(int j=0;j<pixelheight;j+=85)
         {
@@ -136,7 +135,7 @@ static void display(void)
     glPushMatrix();
     //glTranslatef(WIDTH/2.0-(imageWidth*scale/2.0)+dx-160.0,HEIGHT/2.0-(imageHeight*scale/2.0)+dy-5.0,0);
     glTranslatef(30,80,0);
-    glScalef(scale,scale,1);
+    glScalef(0.9,1,1);
     glBegin(GL_POLYGON);
         glTexCoord2d(0,0);  glVertex2f(0,0);
         glTexCoord2d(0,1);  glVertex2f(0,pixelheight);
