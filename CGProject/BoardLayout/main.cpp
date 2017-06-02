@@ -14,47 +14,140 @@
 #include "lodepng.cpp"
 #include<math.h>
 
-int rt1,up1,rt2,up2,d=5;
-
 using namespace std;
-void drawmesh();
-int pixelwidth=700,pixelheight=850;
-int WIDTH=500; // window width & height
+
+//Function prototypes
+
+void setTexture(vector<unsigned char> img, unsigned width, unsigned height);
+void invert(vector<unsigned char> &img,const unsigned width,const unsigned height);
+void loadImage(const char* name);
+
+void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2);
+
+void drawoptions();
+void selectoptions();
+void windowOne();
+void windowTwo();
+void windowThree();
+void drawMesh();
+
+//Variables to be used in the program
+
+int numplayers=0;
+int windowWidth;
+int windowHeight;
+int flag=0;
+bool window2=false,window3=false,window4=false;
+
+int pixelwidth=700;
+int pixelheight=850;
+int WIDTH=500;
 int HEIGHT=500;
-vector <unsigned char> image; // storage for image(pixel array)
-unsigned imageWidth;  // image width and height
+// storage for image(pixel array)
+vector <unsigned char> image_logo;
+vector <unsigned char> image_board;
+// image width and height
+unsigned imageWidth;
 unsigned imageHeight;
 GLuint texname;
 float dx=0.0,dy=0.0;
+
+//Glut functions and their user defined definitions
+void init()
+{
+    glClearColor(0,0,0,0);
+    glViewport(0, 0,WIDTH, HEIGHT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0,1000,0,1000,0,1000);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity() ;
+}
+static void display(void)
+{
+    if(!window2)
+        windowOne();
+    else if(!window3)
+        windowTwo();
+    else
+        windowThree();
+}
+
+static void key(unsigned char key,int x,int y)
+{
+    if(key=='q' || key=='Q' || key==27)
+    {
+        exit(1);
+    }
+    else if(key==13)
+    {
+        window2=true;
+    }
+    else if(key=='p' || key=='P')
+    {
+        window3=true;
+    }
+}
+
+static void specialkeys(int key,int x,int y)
+{
+    if(key==GLUT_KEY_RIGHT)
+    {
+        flag=(flag+1)%3;
+    }
+    else if(key==GLUT_KEY_LEFT)
+    {
+        flag--;
+        if(flag<0)
+            flag=2;
+    }
+    numplayers=flag+2;
+         printf("nop:%d\n",numplayers);
+    printf("flag:%d\n",flag);
+}
+
+static void idle(void)
+{
+    glutPostRedisplay();
+}
+
+int main(int argc, char *argv[])
+{
+    //load image to memory
+
+    if(!window2 &&!window3)
+        loadImage("logo.png");
+    else if(window3)
+        loadImage("board.png");
+
+    glutInit(&argc, argv);
+    glutInitWindowSize(WIDTH,HEIGHT);
+    glutInitWindowPosition(10,10);
+    glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE);
+    glutCreateWindow("Snake and Ladders");
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    init();
+
+    glutFullScreen();
+    glutDisplayFunc(display);
+    glutKeyboardFunc(key);
+    glutSpecialFunc(specialkeys);
+    glutIdleFunc(idle);
+    glutMainLoop();
+    return EXIT_SUCCESS;
+}
+
+
+
+//Functions definitions
+
+//Functions used in image loading
 /** Sets current texture to given image
     @param img is image vector that has already been loaded
     @param width is width of the image
     @param height is height of image
 */
-
-void drawMesh()
-{
-    glLoadIdentity();
-    glPushMatrix();
-    glTranslatef(31,81,-50.0);  //not to delete
-    glPointSize(10.0);
-    glScalef(0.9,1,1);
-    for(int i=0;i<pixelwidth;i+=70)
-        for(int j=0;j<pixelheight;j+=85)
-        {
-            glPointSize(4.0);
-            glColor3f(1.0,0.0,0.0);
-            glBegin(GL_LINE_LOOP);
-                glVertex3f(i,j,50);
-                glVertex3f(i,j+85,50);
-                glVertex3f(i+70,j+85,50);
-                glVertex3f(i+70,j,50);
-            glEnd();
-        }
-}
-
-
-
 void setTexture(vector<unsigned char> img, unsigned width, unsigned height)
 {
     glGenTextures(1, &texname);
@@ -104,36 +197,162 @@ void loadImage(const char* name)
 {
     //use lodepng decode to decode image
     int error;
-    if((error=lodepng::decode(image,imageWidth,imageHeight,name)))
+    if((error=lodepng::decode(image_logo,imageWidth,imageHeight,name)))
+    {
+        cout<<name<<":"<<lodepng_error_text(error)<<endl;
+    }
+    else
+        invert(image_logo,imageWidth,imageHeight);
+
+    if((error=lodepng::decode(image_board,imageWidth,imageHeight,name)))
     {
         cout<<name<<":"<<lodepng_error_text(error)<<endl;
         exit(1);
     }
     else
-        invert(image,imageWidth,imageHeight);
-
+        invert(image_board,imageWidth,imageHeight);
 }
 
-void init()
+//String Writing functions
+
+void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 {
-    glClearColor(0,0,0,0);
-    glViewport(0, 0,WIDTH, HEIGHT);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0,1000,0,1000,0,1000);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity() ;
+      int i;
+	 glPushMatrix();
+	 glTranslatef(x, y,z);
+	 glScalef(p1,p2,z);
+
+	 for (i=0;str[i]!='\0';i++)
+	 {
+    		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN , str[i]);
+	 }
+	 glPopMatrix();
 }
-static void display(void)
+
+// Game play user defined functions
+
+void drawoptions()
+{
+    float cn=windowWidth/2;
+    glColor3f(1.0,0.0,0.0);
+    glRectf(cn-75,70.0,cn+75,150.0);
+
+    glColor3f(0.0,1.0,0.0);
+    glRectf(cn-350,70,cn-200,150);
+
+    glColor3f(0.0,0.0,1.0);
+    glRectf(cn+200,70,cn+350,150);
+}
+
+//Selecting the player box
+void selectoptions()
+{
+    float cn=windowWidth/2;
+    float fontsize=0.13;
+
+    //Text for Player Selection buttons
+    glColor3f(1.0,1.0,1.0);
+    drawStrokeText("2 Players",cn-335.0,100.0,0.0,fontsize,fontsize);
+    drawStrokeText("3 Players",cn-60.0,100.0,0.0,fontsize,fontsize);
+    drawStrokeText("4 Players",cn+215.0,100.0,0.0,fontsize,fontsize);
+
+    if(flag==0)
+    {
+        glColor3f(1.0,1.0,1.0);
+        glLineWidth(2.0);
+        glBegin(GL_LINE_LOOP);
+            glVertex2f(cn-355,65.0);
+            glVertex2f(cn-355,155.0);
+            glVertex2f(cn-195,155.0);
+            glVertex2f(cn-195,65.0);
+        glEnd();
+    }
+    else if(flag==1)
+    {
+        glColor3f(1.0,1.0,1.0);
+        glLineWidth(2.0);
+        glBegin(GL_LINE_LOOP);
+            glVertex2f(cn-80,65.0);
+            glVertex2f(cn-80,155.0);
+            glVertex2f(cn+80,155.0);
+            glVertex2f(cn+80,65.0);
+        glEnd();
+    }
+    else if(flag==2)
+    {   glColor3f(1.0,1.0,1.0);
+        glLineWidth(2.0);
+        glBegin(GL_LINE_LOOP);
+            glVertex2f(cn+355,65.0);
+            glVertex2f(cn+355,155.0);
+            glVertex2f(cn+195,155.0);
+            glVertex2f(cn+195,65.0);
+        glEnd();
+    }
+}
+
+void windowOne()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.0,0.0,0.0,0.0);
+    float scale=0.70;
+    drawoptions();
+    selectoptions();
+    glPushMatrix();
+    //image begin
+     glEnable(GL_TEXTURE_2D);
+    setTexture(image_logo,imageWidth,imageHeight);
+    glPushMatrix();
+    glTranslatef(windowWidth/2-250,400,0);
+    glScalef(scale,scale,1);
+    glBegin(GL_POLYGON);
+        glTexCoord2d(0,0);  glVertex2f(0,0);
+        glTexCoord2d(0,1);  glVertex2f(0,imageHeight);
+        glTexCoord2d(1,1);  glVertex2f(imageWidth,imageHeight);
+        glTexCoord2d(1,0);  glVertex2f(imageWidth,0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    //image end
+    glPopMatrix();
+    glutSwapBuffers();
+}
+
+void windowTwo()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.150, 0.200, 0.400,0.0);
+    float xpos=windowWidth/5;
+    float ypos=windowHeight*3/4;
+
+    glLineWidth(4.0);
+    glColor3f(1.0,1.0,1.0);
+    drawStrokeText("Snake and Ladders - The Game of Chance",xpos,ypos,0,0.210,0.210);
+
+    glColor3f(0.698, 0.133, 0.133);
+    glLineWidth(2.0);
+    drawStrokeText("RULES:",xpos*2.5-15,ypos-90,0,0.17,0.17);
+
+    glColor3f(0.0,0.8,1.0);
+    glLineWidth(1.0);
+    drawStrokeText("1. Objective of the game is to get the number 2048.",20,180,0,0.08,0.08);
+    drawStrokeText("2. You will have a grid of 16 tiles.",20,160,0,0.08,0.08);
+    drawStrokeText("3. Move using arrow keys to join two equal numbers.",20,140,0,0.09,0.08);
+    drawStrokeText("4. When two equal numbers are in touch, they will add up.",20,120,0,0.08,0.08);
+    drawStrokeText("5. If there are no free tiles on our grid, the game ends.",20,100,0,0.08,0.08);
+    glColor3f(1.000, 0.843, 0.000);
+    drawStrokeText("Press P to Play.                  Press Q to Quit.",20,60,0,0.08,0.08);
+    glFlush();
+    glutSwapBuffers();
+}
+
+void windowThree()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glClearColor(1.0,1.0,1.0,1.0);
+    glClearColor(0.0,0.0,0.0,0.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glEnable(GL_TEXTURE_2D);
-    setTexture(image,imageWidth,imageHeight);
+    setTexture(image_board,imageWidth,imageHeight);
     glPushMatrix();
-    //glTranslatef(WIDTH/2.0-(imageWidth*scale/2.0)+dx-160.0,HEIGHT/2.0-(imageHeight*scale/2.0)+dy-5.0,0);
     glTranslatef(30,80,0);
     glScalef(0.9,1,1);
     glBegin(GL_POLYGON);
@@ -148,40 +367,25 @@ static void display(void)
     glutSwapBuffers();
 }
 
-static void key(unsigned char key,int x,int y)
+void drawMesh()
 {
-    switch(key)
-    {
-    case 27:
-        exit(0);
-        break;
-    case 'q':
-        exit(0);
-        break;
-    }
+    glLoadIdentity();
+    glPushMatrix();
+    glTranslatef(31,81,-50.0);  //not to delete
+    glPointSize(10.0);
+    glScalef(0.9,1,1);
+    for(int i=0;i<pixelwidth;i+=70)
+        for(int j=0;j<pixelheight;j+=85)
+        {
+            glPointSize(4.0);
+            glColor3f(1.0,0.0,0.0);
+            glBegin(GL_LINE_LOOP);
+                glVertex3f(i,j,50);
+                glVertex3f(i,j+85,50);
+                glVertex3f(i+70,j+85,50);
+                glVertex3f(i+70,j,50);
+            glEnd();
+        }
 }
 
-static void idle(void)
-{
-    glutPostRedisplay();
-}
-int main(int argc, char *argv[])
-{
-    //load image to memory
-    loadImage("board.png");
-    glutInit(&argc, argv);
-    glutInitWindowSize(WIDTH,HEIGHT);
-    glutInitWindowPosition(10,10);
-    glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE);
-    glutCreateWindow("Snake and Ladders");
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    init();
 
-    glutFullScreen();
-    glutDisplayFunc(display);
-    glutKeyboardFunc(key);
-    glutIdleFunc(idle);
-    glutMainLoop();
-    return EXIT_SUCCESS;
-}

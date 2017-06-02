@@ -31,7 +31,7 @@ void drawStrokeText(char str[250],int x,int y,int z,float p1,float p2)
 	 glPopMatrix();
 }
 
-//Creating Player Box
+
 void draw(GLenum mode=GL_RENDER)
 {
     float cn=windowWidth/2;
