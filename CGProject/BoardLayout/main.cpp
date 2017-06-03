@@ -20,7 +20,7 @@ using namespace std;
 
 void setTexture(vector<unsigned char> img, unsigned width, unsigned height);
 void invert(vector<unsigned char> &img,const unsigned width,const unsigned height);
-void loadImage(const char* name);
+void loadImage(const char* name,int n);
 
 void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2);
 
@@ -45,10 +45,14 @@ int WIDTH=500;
 int HEIGHT=500;
 // storage for image(pixel array)
 vector <unsigned char> image_logo;
-vector <unsigned char> image_board;
 // image width and height
-unsigned imageWidth;
-unsigned imageHeight;
+unsigned logowidth;
+unsigned logoheight;
+
+vector <unsigned char> image_board;
+unsigned boardwidth;
+unsigned boardheight;
+
 GLuint texname;
 float dx=0.0,dy=0.0;
 
@@ -114,12 +118,9 @@ static void idle(void)
 int main(int argc, char *argv[])
 {
     //load image to memory
-
-    if(!window2 &&!window3)
-        loadImage("logo.png");
-    else if(window3)
-        loadImage("board.png");
-
+    loadImage("logo.png",1);
+    loadImage("board.png",0);
+    glGenTextures(1, &texname);
     glutInit(&argc, argv);
     glutInitWindowSize(WIDTH,HEIGHT);
     glutInitWindowPosition(10,10);
@@ -150,7 +151,7 @@ int main(int argc, char *argv[])
 */
 void setTexture(vector<unsigned char> img, unsigned width, unsigned height)
 {
-    glGenTextures(1, &texname);
+
     glBindTexture(GL_TEXTURE_2D, texname);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -193,24 +194,30 @@ void invert(vector<unsigned char> &img,const unsigned width,const unsigned heigh
 /**
 Load image into memory
 */
-void loadImage(const char* name)
+void loadImage(const char* name,int n)
 {
     //use lodepng decode to decode image
     int error;
-    if((error=lodepng::decode(image_logo,imageWidth,imageHeight,name)))
+    if(n)
     {
-        cout<<name<<":"<<lodepng_error_text(error)<<endl;
+            if((error=lodepng::decode(image_logo,logowidth,logoheight,name)))
+            {
+                cout<<name<<":"<<lodepng_error_text(error)<<endl;
+            }
+            else
+                invert(image_logo,logowidth,logoheight);
     }
     else
-        invert(image_logo,imageWidth,imageHeight);
+    {
+            if((error=lodepng::decode(image_board,boardwidth,boardheight,name)))
+            {
+                cout<<name<<":"<<lodepng_error_text(error)<<endl;
+                exit(1);
+            }
+            else
+                invert(image_board,boardwidth,boardheight);
+    }
 
-    if((error=lodepng::decode(image_board,imageWidth,imageHeight,name)))
-    {
-        cout<<name<<":"<<lodepng_error_text(error)<<endl;
-        exit(1);
-    }
-    else
-        invert(image_board,imageWidth,imageHeight);
 }
 
 //String Writing functions
@@ -233,6 +240,8 @@ void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 
 void drawoptions()
 {
+    glPushMatrix();
+    glTranslatef(300,500,0);
     float cn=windowWidth/2;
     glColor3f(1.0,0.0,0.0);
     glRectf(cn-75,70.0,cn+75,150.0);
@@ -242,11 +251,15 @@ void drawoptions()
 
     glColor3f(0.0,0.0,1.0);
     glRectf(cn+200,70,cn+350,150);
+
+    glPopMatrix();
 }
 
 //Selecting the player box
 void selectoptions()
 {
+    glPushMatrix();
+    glTranslatef(300,500,0);
     float cn=windowWidth/2;
     float fontsize=0.13;
 
@@ -288,6 +301,8 @@ void selectoptions()
             glVertex2f(cn+195,65.0);
         glEnd();
     }
+    glPopMatrix();
+
 }
 
 void windowOne()
@@ -300,15 +315,15 @@ void windowOne()
     glPushMatrix();
     //image begin
      glEnable(GL_TEXTURE_2D);
-    setTexture(image_logo,imageWidth,imageHeight);
+    setTexture(image_logo,logowidth,logoheight);
     glPushMatrix();
-    glTranslatef(windowWidth/2-250,400,0);
+    glTranslatef(300,500,0);
     glScalef(scale,scale,1);
     glBegin(GL_POLYGON);
         glTexCoord2d(0,0);  glVertex2f(0,0);
-        glTexCoord2d(0,1);  glVertex2f(0,imageHeight);
-        glTexCoord2d(1,1);  glVertex2f(imageWidth,imageHeight);
-        glTexCoord2d(1,0);  glVertex2f(imageWidth,0);
+        glTexCoord2d(0,1);  glVertex2f(0,logoheight);
+        glTexCoord2d(1,1);  glVertex2f(logowidth,logoheight);
+        glTexCoord2d(1,0);  glVertex2f(logowidth,0);
     glEnd();
     glDisable(GL_TEXTURE_2D);
     //image end
@@ -351,7 +366,7 @@ void windowThree()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glEnable(GL_TEXTURE_2D);
-    setTexture(image_board,imageWidth,imageHeight);
+    setTexture(image_board,boardwidth,boardheight);
     glPushMatrix();
     glTranslatef(30,80,0);
     glScalef(0.9,1,1);
