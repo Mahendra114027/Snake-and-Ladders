@@ -30,6 +30,8 @@ void windowOne();
 void windowTwo();
 void windowThree();
 void drawMesh();
+void drawplayer();
+void mouse (int button, int state, int x, int y);
 
 //Variables to be used in the program
 
@@ -38,6 +40,13 @@ int windowWidth;
 int windowHeight;
 int flag=0;
 bool window2=false,window3=false,window4=false;
+int dice1,dice2;
+int p1flag=1;
+int p2flag=0;
+float rt1=0,up1=0,rt2=0,up2=0;
+int p1sum=0;
+int p2sum=0;
+
 
 int pixelwidth=700;
 int pixelheight=850;
@@ -135,6 +144,7 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(key);
     glutSpecialFunc(specialkeys);
     glutIdleFunc(idle);
+    glutMouseFunc(mouse);
     glutMainLoop();
     return EXIT_SUCCESS;
 }
@@ -344,15 +354,17 @@ void windowTwo()
 
     glColor3f(0.698, 0.133, 0.133);
     glLineWidth(2.0);
+    drawStrokeText("Here's a Snakes and ladders board game to play with your friends and family. ",xpos*2.5-15,ypos-90,0,0.17,0.17);
     drawStrokeText("RULES:",xpos*2.5-15,ypos-90,0,0.17,0.17);
 
     glColor3f(0.0,0.8,1.0);
     glLineWidth(1.0);
-    drawStrokeText("1. Objective of the game is to get the number 2048.",20,180,0,0.08,0.08);
-    drawStrokeText("2. You will have a grid of 16 tiles.",20,160,0,0.08,0.08);
-    drawStrokeText("3. Move using arrow keys to join two equal numbers.",20,140,0,0.09,0.08);
-    drawStrokeText("4. When two equal numbers are in touch, they will add up.",20,120,0,0.08,0.08);
-    drawStrokeText("5. If there are no free tiles on our grid, the game ends.",20,100,0,0.08,0.08);
+    drawStrokeText("1. Objective of the game is to get to the number 100 which is the final destination.",20,180,0,0.08,0.08);
+    drawStrokeText("2. Each player puts their counter on the space near the arrow mark.",20,160,0,0.08,0.08);
+    drawStrokeText("3. Take it in turns to play the dice. Counter forwards to the number of spaces shown on the dice.",20,140,0,0.09,0.08);
+    drawStrokeText("4. If your counter lands at the bottom of a ladder, you can move up to the top of the ladder.",20,120,0,0.08,0.08);
+    drawStrokeText("5. If your counter lands on the head of a snake, you must slide down to the bottom of the snake.",20,100,0,0.08,0.08);
+    drawStrokeText("6. The first player to get to the space that says '100' is the winner.",20,100,0,0.08,0.08);
     glColor3f(1.000, 0.843, 0.000);
     drawStrokeText("Press P to Play.                  Press Q to Quit.",20,60,0,0.08,0.08);
     glFlush();
@@ -379,6 +391,8 @@ void windowThree()
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
     drawMesh();
+    drawplayer();
+
     glutSwapBuffers();
 }
 
@@ -401,6 +415,325 @@ void drawMesh()
                 glVertex3f(i+70,j,50);
             glEnd();
         }
+
+
+
 }
 
+void drawplayer()
+{
+    glPointSize(200.0);
+        glColor3f(1.0,0.0,1.0);
+        glBegin(GL_POLYGON);
+        int pi=3.14;
+        float th=0,r=25;
+        for(int i=0;i<360;i++){
+            glVertex3f((r*cos((pi/(float)180)*th))+35+rt1,(r*sin((pi/(float)180)*th))+42.5+up1,-100);
 
+            th=th+1;
+        }
+        glEnd();
+
+                glPointSize(200.0);
+        glColor3f(0.0,0.0,1.0);
+        glBegin(GL_POLYGON);
+
+        for(int i=0;i<360;i++){
+            glVertex3f((r*cos((pi/(float)180)*th))+35+rt2,(r*sin((pi/(float)180)*th))+42.5+up2,-100);
+
+            th=th+1;
+        }
+        glEnd();
+
+}
+
+void mouse (int button, int state, int x, int y)            //mouse function...
+{
+  switch(button) {
+    case GLUT_LEFT_BUTTON:  if(state == GLUT_DOWN)
+                            {
+                                if(p1sum<=100)
+
+                                {
+
+                                      if(p1flag==1)
+                                      {
+                                        dice1=(rand()%6)+1;
+                                      if((p1sum+dice1)<=99)
+                                      {
+
+
+                                        p1sum+=dice1;
+                                        if(p1sum==4 || p1sum==9 || p1sum==20 || p1sum==34  || p1sum==59 || p1sum==27 || p1sum==70 || p1sum==79 )
+
+                                        {
+
+                                            if(p1sum==4)
+                                                {   p1sum=16;
+                                                rt1=70*(p1sum%10);
+                                                up1=85*(p1sum/10);
+
+                                                }
+
+                                            if(p1sum==9)
+                                                {   p1sum=39;
+                                                rt1=70*(p1sum%10);
+                                                up1=85*(p1sum/10);
+
+                                                }
+                                            if(p1sum==20)
+                                                {   p1sum=41;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==34)
+                                                {   p1sum=43;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==27)
+                                                {   p1sum=83;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==59)
+                                                {   p1sum=66;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                    }
+                                                  if(p1sum==70)
+                                                {   p1sum=90;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==79)
+                                                {   p1sum=99;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+
+                                                p1flag=0;
+                                                p2flag=1;
+                                                printf("\n%d",p1sum);
+                                            }
+                                        else
+                                        {
+                                            rt1=70*(p1sum%10);
+                                            up1=85*(p1sum/10);
+                                            p1flag=0;
+                                            p2flag=1;
+                                            printf("\n%d",p1sum);
+                                        }
+                                        if(p1sum==14 || p1sum==46 || p1sum==48 || p1sum==61 || p1sum==62 || p1sum==86 || p1sum==92 || p1sum==95 || p1sum==97)
+                                        {
+                                              if(p1sum==14)
+                                                {   p1sum=5;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==46)
+                                                {   p1sum=25;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==48)
+                                                {   p1sum=29;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==61)
+                                                {   p1sum=11;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==62)
+                                                {   p1sum=50;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==86)
+                                                {   p1sum=23;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==92)
+                                                {   p1sum=72;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==95)
+                                                {   p1sum=75;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==97)
+                                                {   p1sum=77;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                        }
+                                    }
+                                      }
+                                }
+                            }
+                        break;
+    case GLUT_RIGHT_BUTTON: if(state == GLUT_DOWN)
+                              {
+                                    if(p2sum<=100)
+
+                                {
+
+                                      if(p2flag==1)
+                                      {
+                                        dice2=(rand()%6)+1;
+                                      if((p2sum+dice2)<=99)
+                                      {
+
+
+                                        p2sum+=dice2;
+                                        if(p2sum==4 || p2sum==9 || p2sum==20 || p2sum==34  || p2sum==59 || p2sum==27 || p2sum==70 || p2sum==79 )
+
+                                        {
+
+                                            if(p2sum==4)
+                                                {   p2sum=16;
+                                                rt2=70*(p2sum%10);
+                                                up2=85*(p2sum/10);
+
+                                                }
+
+                                            if(p2sum==9)
+                                                {   p2sum=39;
+                                                rt2=70*(p2sum%10);
+                                                up2=85*(p2sum/10);
+
+                                                }
+                                            if(p2sum==20)
+                                                {   p2sum=41;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==34)
+                                                {   p2sum=43;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==27)
+                                                {   p2sum=83;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==59)
+                                                {   p2sum=66;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                    }
+                                                  if(p2sum==70)
+                                                {   p2sum=90;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==79)
+                                                {   p2sum=99;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+
+                                                p2flag=0;
+                                                p1flag=1;
+                                                printf("\n%d@@@",p2sum);
+                                            }
+                                        else
+                                        {
+                                            rt2=70*(p2sum%10);
+                                            up2=85*(p2sum/10);
+                                            p2flag=0;
+                                            p1flag=1;
+                                            printf("\n%d@@@",p2sum);
+                                        }
+                                        if(p2sum==14 || p2sum==46 || p2sum==48 || p2sum==61 || p2sum==62 || p2sum==86 || p2sum==92 || p2sum==95 || p2sum==97)
+                                        {
+                                              if(p2sum==14)
+                                                {   p2sum=5;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==46)
+                                                {   p2sum=25;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==48)
+                                                {   p2sum=29;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==61)
+                                                {   p2sum=11;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==62)
+                                                {   p2sum=50;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==86)
+                                                {   p2sum=23;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==92)
+                                                {   p2sum=72;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==95)
+                                                {   p2sum=75;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                                  if(p2sum==97)
+                                                {   p2sum=77;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+                                        }
+                                    }
+                                      }
+                                }
+                              }
+                              break;
+    default:break;
+  }
+}

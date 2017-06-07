@@ -1,11 +1,16 @@
 # depslib dependency file v1.0
-1496342698 source:e:\#projects\github\snake-and-ladders\cgproject\boardlayout\main.cpp
+1496515890 source:e:\#projects\github\snake-and-ladders\cgproject\boardlayout\main.cpp
 	<GLUT/glut.h>
+	<GLUT/glext.h>
 	<GL/glut.h>
+	<GL/glext.h>
+	<stdio.h>
 	<stdlib.h>
 	<iostream>
-	<stdio.h>
-	<cmath>
+	<vector>
+	"lodepng.h"
+	"lodepng.cpp"
+	<math.h>
 
 1426329928 c:\program files (x86)\codeblocks\mingw\include\gl\glut.h
 	"freeglut_std.h"
@@ -240,4 +245,27 @@
 1341006780 c:\program files (x86)\codeblocks\mingw\include\sys\types.h
 	<_mingw.h>
 	<stddef.h>
+
+1301111164 c:\program files (x86)\codeblocks\mingw\include\gl\glext.h
+	<windows.h>
+
+1493457976 e:\#projects\github\snake-and-ladders\cgproject\boardlayout\lodepng.h
+	<string.h>
+	<vector>
+	<string>
+	"lodepng.h"
+	<iostream>
+	"lodepng.h"
+
+1493457977 e:\#projects\github\snake-and-ladders\cgproject\boardlayout\lodepng.cpp
+	"lodepng.h"
+	<limits.h>
+	<stdio.h>
+	<stdlib.h>
+
+1341006774 c:\program files (x86)\codeblocks\mingw\include\limits.h
+	<_mingw.h>
+
+1341006774 c:\program files (x86)\codeblocks\mingw\include\math.h
+	<_mingw.h>
 
