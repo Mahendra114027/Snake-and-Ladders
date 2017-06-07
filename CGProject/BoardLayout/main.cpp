@@ -68,7 +68,7 @@ float dx=0.0,dy=0.0;
 //Glut functions and their user defined definitions
 void init()
 {
-    glClearColor(0,0,0,0);
+    glClearColor(0.0,0.0,0.0,0.0);
     glViewport(0, 0,WIDTH, HEIGHT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -241,7 +241,7 @@ void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 
 	 for (i=0;str[i]!='\0';i++)
 	 {
-    		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN , str[i]);
+    		glutStrokeCharacter(GLUT_STROKE_ROMAN , str[i]);
 	 }
 	 glPopMatrix();
 }
@@ -250,18 +250,24 @@ void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 
 void drawoptions()
 {
+    float cn=windowWidth/2;
+
+    glColor3f(1.0,0.0,0.0);
     glPushMatrix();
     glTranslatef(500,100,0);
-    float cn=windowWidth/2;
-    glColor3f(1.0,0.0,0.0);
-    glRectf(cn-75,50.0,cn+75,150.0);
+        glRectf(cn-75,50.0,cn+75,150.0);
+    glPopMatrix();
 
     glColor3f(0.0,1.0,0.0);
+    glPushMatrix();
+        glTranslatef(500,100,0);
     glRectf(cn-350,50,cn-200,150);
+    glPopMatrix();
 
     glColor3f(0.0,0.0,1.0);
-    glRectf(cn+200,50,cn+350,150);
-
+    glPushMatrix();
+    glTranslatef(500,100,0);
+        glRectf(cn+200,50,cn+350,150);
     glPopMatrix();
 }
 
@@ -337,7 +343,6 @@ void selectoptions()
 void windowOne()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(0.0,0.0,0.0,0.0);
     float scale=0.70;
     drawoptions();
     selectoptions();
@@ -363,7 +368,6 @@ void windowOne()
 void windowTwo()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(0.150, 0.200, 0.400,0.0);
     float xpos=windowWidth/5;
     float ypos=windowHeight*3/4;
 
@@ -393,7 +397,6 @@ void windowTwo()
 void windowThree()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.0,0.0,0.0,0.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glEnable(GL_TEXTURE_2D);
