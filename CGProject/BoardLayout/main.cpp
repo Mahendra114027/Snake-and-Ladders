@@ -63,7 +63,6 @@ unsigned boardwidth;
 unsigned boardheight;
 
 GLuint texname;
-float dx=0.0,dy=0.0;
 
 //Glut functions and their user defined definitions
 void init()
@@ -138,6 +137,9 @@ int main(int argc, char *argv[])
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     init();
+
+    windowWidth=glutGet(GLUT_WINDOW_WIDTH);
+    windowHeight=glutGet(GLUT_WINDOW_HEIGHT);
 
     glutFullScreen();
     glutDisplayFunc(display);
@@ -251,22 +253,23 @@ void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 void drawoptions()
 {
     float cn=windowWidth/2;
+    float transx=windowWidth/2;
 
     glColor3f(1.0,0.0,0.0);
     glPushMatrix();
-    glTranslatef(500,100,0);
+    glTranslatef(transx,100,0);
         glRectf(cn-75,50.0,cn+75,150.0);
     glPopMatrix();
 
     glColor3f(0.0,1.0,0.0);
     glPushMatrix();
-        glTranslatef(500,100,0);
+        glTranslatef(transx,100,0);
     glRectf(cn-350,50,cn-200,150);
     glPopMatrix();
 
     glColor3f(0.0,0.0,1.0);
     glPushMatrix();
-    glTranslatef(500,100,0);
+    glTranslatef(transx,100,0);
         glRectf(cn+200,50,cn+350,150);
     glPopMatrix();
 }
@@ -276,29 +279,30 @@ void selectoptions()
 {
     float cn=windowWidth/2;
     float fontsize=0.13;
+    float transx=windowWidth/2;
 
     //Text for Player Selection buttons
     glColor3f(1.0,1.0,1.0);
 
     glPushMatrix();
-    glTranslatef(500,100,0);
+    glTranslatef(transx,100,0);
         drawStrokeText("2 Players",cn-335.0,100.0,0.0,fontsize,fontsize);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(500,100,0);
+    glTranslatef(transx,100,0);
         drawStrokeText("3 Players",cn-60.0,100.0,0.0,fontsize,fontsize);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(500,100,0);
+    glTranslatef(transx,100,0);
         drawStrokeText("4 Players",cn+215.0,100.0,0.0,fontsize,fontsize);
     glPopMatrix();
 
     if(flag==0)
     {
         glPushMatrix();
-        glTranslatef(500,100,0);
+        glTranslatef(transx,100,0);
         glColor3f(1.0,1.0,1.0);
         glLineWidth(2.0);
         glBegin(GL_LINE_LOOP);
@@ -312,7 +316,7 @@ void selectoptions()
     else if(flag==1)
     {
         glPushMatrix();
-        glTranslatef(500,100,0);
+        glTranslatef(transx,100,0);
         glColor3f(1.0,1.0,1.0);
         glLineWidth(2.0);
         glBegin(GL_LINE_LOOP);
@@ -326,7 +330,7 @@ void selectoptions()
     else if(flag==2)
     {
         glPushMatrix();
-        glTranslatef(500,100,0);
+        glTranslatef(transx,100,0);
         glColor3f(1.0,1.0,1.0);
         glLineWidth(2.0);
         glBegin(GL_LINE_LOOP);
@@ -370,26 +374,54 @@ void windowTwo()
     glClear(GL_COLOR_BUFFER_BIT);
     float xpos=windowWidth/5;
     float ypos=windowHeight*3/4;
+    float xtrans=windowWidth/6;
+    float ytrans=windowHeight;
+    float fontsize=0.13;
 
-    glLineWidth(4.0);
+    /*glColor3f(1.0,1.0,1.0);
+        glLineWidth(2.0);
+        glBegin(GL_LINE_LOOP);
+            glVertex2f(10,10);
+            glVertex2f(windowWidth-10,10);
+            glVertex2f(windowWidth-10,windowHeight);
+            glVertex2f(10,windowHeight);
+        glEnd();
+    */
+
+    glPushMatrix();
+    glTranslatef(xtrans,ytrans,0);
+    glLineWidth(3.0);
     glColor3f(1.0,1.0,1.0);
-    drawStrokeText("Snake and Ladders - The Game of Chance",xpos,ypos,0,0.210,0.210);
+        drawStrokeText("Snake and Ladders - The Game of Chance",xpos,ypos,0,0.210,0.210);
+    glPopMatrix();
 
+    glPushMatrix();
+    glTranslatef(xtrans,ytrans,0);
     glColor3f(0.698, 0.133, 0.133);
     glLineWidth(2.0);
-    drawStrokeText("Here's a Snakes and ladders board game to play with your friends and family. ",xpos*2.5-15,ypos-90,0,0.17,0.17);
-    drawStrokeText("RULES:",xpos*2.5-15,ypos-90,0,0.17,0.17);
+        drawStrokeText("Here's a Snakes and ladders board game to play with your friends and family. ",xpos-150,ypos-100,0,0.17,0.17);
+        glColor3f(1.0, 1.0, 0.0);
+        drawStrokeText("RULES:",xpos*2.50+80,ypos-180,0,0.17,0.17);
+    glPopMatrix();
 
+    glPushMatrix();
+    glTranslatef(xtrans,ytrans,0);
     glColor3f(0.0,0.8,1.0);
-    glLineWidth(1.0);
-    drawStrokeText("1. Objective of the game is to get to the number 100 which is the final destination.",20,180,0,0.08,0.08);
-    drawStrokeText("2. Each player puts their counter on the space near the arrow mark.",20,160,0,0.08,0.08);
-    drawStrokeText("3. Take it in turns to play the dice. Counter forwards to the number of spaces shown on the dice.",20,140,0,0.09,0.08);
-    drawStrokeText("4. If your counter lands at the bottom of a ladder, you can move up to the top of the ladder.",20,120,0,0.08,0.08);
-    drawStrokeText("5. If your counter lands on the head of a snake, you must slide down to the bottom of the snake.",20,100,0,0.08,0.08);
-    drawStrokeText("6. The first player to get to the space that says '100' is the winner.",20,100,0,0.08,0.08);
+    glLineWidth(1.3);
+        drawStrokeText("1. Objective of the game is to get to the number 100 which is the final destination.",0,ypos-250,0,fontsize,fontsize);
+        drawStrokeText("2. Each player puts their counter on the space near the arrow mark.",0,ypos-300,0,fontsize,fontsize);
+        drawStrokeText("3. Take it in turns to play the dice. Counter forwards to the number of spaces shown on the dice.",0,ypos-350,0,fontsize,fontsize);
+        drawStrokeText("4. If your counter lands at the bottom of a ladder, you can move up to the top of the ladder.",0,ypos-400,0,fontsize,fontsize);
+        drawStrokeText("5. If your counter lands on the head of a snake, you must slide down to the bottom of the snake.",0,ypos-450,0,fontsize,fontsize);
+        drawStrokeText("6. The first player to get to the space that says '100' is the winner.",0,ypos-500,0,fontsize,fontsize);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(xtrans,ytrans,0);
     glColor3f(1.000, 0.843, 0.000);
-    drawStrokeText("Press P to Play.                  Press Q to Quit.",20,60,0,0.08,0.08);
+        drawStrokeText("Press P to Play.                  Press Q to Quit.",xpos*1.2,ypos-650,0,fontsize+0.03,fontsize+0.03);
+    glPopMatrix();
+
     glFlush();
     glutSwapBuffers();
 }
@@ -437,9 +469,6 @@ void drawMesh()
                 glVertex3f(i+70,j,50);
             glEnd();
         }
-
-
-
 }
 
 void drawplayer()
