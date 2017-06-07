@@ -254,13 +254,13 @@ void drawoptions()
     glTranslatef(500,100,0);
     float cn=windowWidth/2;
     glColor3f(1.0,0.0,0.0);
-    glRectf(cn-75,70.0,cn+75,150.0);
+    glRectf(cn-75,50.0,cn+75,150.0);
 
     glColor3f(0.0,1.0,0.0);
-    glRectf(cn-350,70,cn-200,150);
+    glRectf(cn-350,50,cn-200,150);
 
     glColor3f(0.0,0.0,1.0);
-    glRectf(cn+200,70,cn+350,150);
+    glRectf(cn+200,50,cn+350,150);
 
     glPopMatrix();
 }
@@ -296,10 +296,10 @@ void selectoptions()
         glColor3f(1.0,1.0,1.0);
         glLineWidth(2.0);
         glBegin(GL_LINE_LOOP);
-            glVertex2f(cn-355,65.0);
+            glVertex2f(cn-355,45.0);
             glVertex2f(cn-355,155.0);
             glVertex2f(cn-195,155.0);
-            glVertex2f(cn-195,65.0);
+            glVertex2f(cn-195,45.0);
         glEnd();
         glPopMatrix();
     }
@@ -310,10 +310,10 @@ void selectoptions()
         glColor3f(1.0,1.0,1.0);
         glLineWidth(2.0);
         glBegin(GL_LINE_LOOP);
-            glVertex2f(cn-80,65.0);
+            glVertex2f(cn-80,45.0);
             glVertex2f(cn-80,155.0);
             glVertex2f(cn+80,155.0);
-            glVertex2f(cn+80,65.0);
+            glVertex2f(cn+80,45.0);
         glEnd();
         glPopMatrix();
     }
@@ -324,10 +324,10 @@ void selectoptions()
         glColor3f(1.0,1.0,1.0);
         glLineWidth(2.0);
         glBegin(GL_LINE_LOOP);
-            glVertex2f(cn+355,65.0);
+            glVertex2f(cn+355,45.0);
             glVertex2f(cn+355,155.0);
             glVertex2f(cn+195,155.0);
-            glVertex2f(cn+195,65.0);
+            glVertex2f(cn+195,45.0);
         glEnd();
         glPopMatrix();
     }
