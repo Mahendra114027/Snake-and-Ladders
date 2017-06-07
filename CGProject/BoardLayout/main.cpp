@@ -251,7 +251,7 @@ void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 void drawoptions()
 {
     glPushMatrix();
-    glTranslatef(300,500,0);
+    glTranslatef(500,100,0);
     float cn=windowWidth/2;
     glColor3f(1.0,0.0,0.0);
     glRectf(cn-75,70.0,cn+75,150.0);
@@ -268,19 +268,31 @@ void drawoptions()
 //Selecting the player box
 void selectoptions()
 {
-    glPushMatrix();
-    glTranslatef(300,500,0);
     float cn=windowWidth/2;
     float fontsize=0.13;
 
     //Text for Player Selection buttons
     glColor3f(1.0,1.0,1.0);
-    drawStrokeText("2 Players",cn-335.0,100.0,0.0,fontsize,fontsize);
-    drawStrokeText("3 Players",cn-60.0,100.0,0.0,fontsize,fontsize);
-    drawStrokeText("4 Players",cn+215.0,100.0,0.0,fontsize,fontsize);
+
+    glPushMatrix();
+    glTranslatef(500,100,0);
+        drawStrokeText("2 Players",cn-335.0,100.0,0.0,fontsize,fontsize);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(500,100,0);
+        drawStrokeText("3 Players",cn-60.0,100.0,0.0,fontsize,fontsize);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(500,100,0);
+        drawStrokeText("4 Players",cn+215.0,100.0,0.0,fontsize,fontsize);
+    glPopMatrix();
 
     if(flag==0)
     {
+        glPushMatrix();
+        glTranslatef(500,100,0);
         glColor3f(1.0,1.0,1.0);
         glLineWidth(2.0);
         glBegin(GL_LINE_LOOP);
@@ -289,9 +301,12 @@ void selectoptions()
             glVertex2f(cn-195,155.0);
             glVertex2f(cn-195,65.0);
         glEnd();
+        glPopMatrix();
     }
     else if(flag==1)
     {
+        glPushMatrix();
+        glTranslatef(500,100,0);
         glColor3f(1.0,1.0,1.0);
         glLineWidth(2.0);
         glBegin(GL_LINE_LOOP);
@@ -300,9 +315,13 @@ void selectoptions()
             glVertex2f(cn+80,155.0);
             glVertex2f(cn+80,65.0);
         glEnd();
+        glPopMatrix();
     }
     else if(flag==2)
-    {   glColor3f(1.0,1.0,1.0);
+    {
+        glPushMatrix();
+        glTranslatef(500,100,0);
+        glColor3f(1.0,1.0,1.0);
         glLineWidth(2.0);
         glBegin(GL_LINE_LOOP);
             glVertex2f(cn+355,65.0);
@@ -310,8 +329,8 @@ void selectoptions()
             glVertex2f(cn+195,155.0);
             glVertex2f(cn+195,65.0);
         glEnd();
+        glPopMatrix();
     }
-    glPopMatrix();
 
 }
 
