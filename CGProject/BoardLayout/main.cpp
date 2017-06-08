@@ -391,8 +391,11 @@ void windowTwo()
     glPushMatrix();
     glTranslatef(xtrans,ytrans,0);
     glLineWidth(3.0);
-    glColor3f(1.0,1.0,1.0);
+    glColor3f(0.0,1.0,0.0);
         drawStrokeText("Snake and Ladders - The Game of Chance",xpos,ypos,0,0.210,0.210);
+        glBegin(GL_LINES);
+            glVertex2f(xpos,ypos-15);glVertex2f(xpos+620,ypos-15);
+        glEnd();
     glPopMatrix();
 
     glPushMatrix();
