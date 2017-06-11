@@ -31,6 +31,10 @@ void windowTwo();
 void windowThree();
 void drawMesh();
 void drawplayer();
+void drawdice();
+void spindDisplay();
+void gameplay();
+void diceposition();
 void mouse (int button, int state, int x, int y);
 
 //Variables to be used in the program
@@ -43,9 +47,14 @@ bool window2=false,window3=false,window4=false;
 int dice1,dice2;
 int p1flag=1;
 int p2flag=0;
-float rt1=0,up1=0,rt2=0,up2=0;
+float rt1=0,up1=0,rt2=0,up2=0,st1=-70,st2=-70;
 int p1sum=0;
 int p2sum=0;
+int pc=0;
+int dp=-1;
+
+float d=50;
+float spin;
 
 
 int pixelwidth=700;
@@ -432,6 +441,7 @@ void windowTwo()
 void windowThree()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.0,0.0,0.0,0.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glEnable(GL_TEXTURE_2D);
@@ -449,7 +459,18 @@ void windowThree()
     glDisable(GL_TEXTURE_2D);
     drawMesh();
     drawplayer();
-
+    glPushMatrix();
+        glTranslatef(900.0,200.0,0.0);
+        glRotatef(spin, 1.0, 0.5, 1.0);
+    if(dp<0)
+    {
+        drawdice();
+    }
+    if(dp>0)
+    {
+        diceposition();
+    }
+    glPopMatrix();
     glutSwapBuffers();
 }
 
@@ -482,7 +503,7 @@ void drawplayer()
         int pi=3.14;
         float th=0,r=25;
         for(int i=0;i<360;i++){
-            glVertex3f((r*cos((pi/(float)180)*th))+35+rt1,(r*sin((pi/(float)180)*th))+42.5+up1,-100);
+            glVertex3f((r*cos((pi/(float)180)*th))+35+rt1+st1,(r*sin((pi/(float)180)*th))+42.5+up1,-100);
 
             th=th+1;
         }
@@ -493,7 +514,7 @@ void drawplayer()
         glBegin(GL_POLYGON);
 
         for(int i=0;i<360;i++){
-            glVertex3f((r*cos((pi/(float)180)*th))+35+rt2,(r*sin((pi/(float)180)*th))+42.5+up2,-100);
+            glVertex3f((r*cos((pi/(float)180)*th))+35+rt2+st2,(r*sin((pi/(float)180)*th))+42.5+up2,-100);
 
             th=th+1;
         }
@@ -505,164 +526,128 @@ void mouse (int button, int state, int x, int y)            //mouse function...
 {
   switch(button) {
     case GLUT_LEFT_BUTTON:  if(state == GLUT_DOWN)
-                            {
-                                if(p1sum<=100)
+                            {   dp=-1;
+                                glutIdleFunc(spindDisplay);
 
-                                {
-
-                                      if(p1flag==1)
-                                      {
-                                        dice1=(rand()%6)+1;
-                                      if((p1sum+dice1)<=99)
-                                      {
-
-
-                                        p1sum+=dice1;
-                                        if(p1sum==4 || p1sum==9 || p1sum==20 || p1sum==34  || p1sum==59 || p1sum==27 || p1sum==70 || p1sum==79 )
-
-                                        {
-
-                                            if(p1sum==4)
-                                                {   p1sum=16;
-                                                rt1=70*(p1sum%10);
-                                                up1=85*(p1sum/10);
-
-                                                }
-
-                                            if(p1sum==9)
-                                                {   p1sum=39;
-                                                rt1=70*(p1sum%10);
-                                                up1=85*(p1sum/10);
-
-                                                }
-                                            if(p1sum==20)
-                                                {   p1sum=41;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==34)
-                                                {   p1sum=43;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==27)
-                                                {   p1sum=83;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==59)
-                                                {   p1sum=66;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                    }
-                                                  if(p1sum==70)
-                                                {   p1sum=90;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==79)
-                                                {   p1sum=99;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-
-                                                p1flag=0;
-                                                p2flag=1;
-                                                printf("\n%d",p1sum);
-                                            }
-                                        else
-                                        {
-                                            rt1=70*(p1sum%10);
-                                            up1=85*(p1sum/10);
-                                            p1flag=0;
-                                            p2flag=1;
-                                            printf("\n%d",p1sum);
-                                        }
-                                        if(p1sum==14 || p1sum==46 || p1sum==48 || p1sum==61 || p1sum==62 || p1sum==86 || p1sum==92 || p1sum==95 || p1sum==97)
-                                        {
-                                              if(p1sum==14)
-                                                {   p1sum=5;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==46)
-                                                {   p1sum=25;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==48)
-                                                {   p1sum=29;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==61)
-                                                {   p1sum=11;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==62)
-                                                {   p1sum=50;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==86)
-                                                {   p1sum=23;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==92)
-                                                {   p1sum=72;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==95)
-                                                {   p1sum=75;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                                  if(p1sum==97)
-                                                {   p1sum=77;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
-
-                                                }
-                                        }
-                                    }
-                                      }
-                                }
                             }
                         break;
     case GLUT_RIGHT_BUTTON: if(state == GLUT_DOWN)
-                              {
-                                    if(p2sum<=100)
+                              {     dp=2;
+                                  glutIdleFunc(diceposition);
+                                pc++;
+                                gameplay();
+                              }
+                              break;
+    default:break;
+  }
+}
 
-                                {
 
-                                      if(p2flag==1)
+void drawdice()
+{
+    glColor3f(1,0,1);
+
+    glBegin(GL_QUADS);
+    //top
+    glColor3f(1,0,1);
+    glVertex3f(-d,d,+d); //-x,y,z
+    //glColor3f(1,1,1);
+    glVertex3f(d,d,+d); //x,y,z
+    //glColor3f(1,0,1);
+    glVertex3f(d,d,-d); //x,y,-z
+    //glColor3f(1,0,0);
+    glVertex3f(-d,d,-d); //-x,y,-z
+
+    //bottom
+    glColor3f(1,0,0);
+    glVertex3f(-d,-d,d); //-x,y=0,z
+    //glColor3f(0,1,1);
+    glVertex3f(d,-d,d); //x,y=0,z
+    //glColor3f(0,0,1);
+    glVertex3f(d,-d,-d); //x,y=0,-z
+    //glColor3f(0,1,1);
+    glVertex3f(-d,-d,-d); //-x,y=0,-z
+
+    //left
+    glColor3f(0,1,0);
+    glVertex3f(-d,-d,d); //-x,y=0,z
+    //glColor3f(0,1,1);
+    glVertex3f(-d,-d,-d); //-x,y=0,-z
+    //glColor3f(1,0,0);
+    glVertex3f(-d,d,-d); //-x,y,-z
+    //glColor3f(1,1,0);
+    glVertex3f(-d,d,d); //-x,y,z
+
+    //right
+    glColor3f(1,1,0);
+    glVertex3f(d,-d,d); //x,y=0,z
+    //glColor3f(0,0,1);
+    glVertex3f(d,-d,-d); //x,y=0,-z
+    //glColor3f(1,0,1);
+    glVertex3f(d,d,-d); //x,y,-z
+    //glColor3f(1,1,1);
+    glVertex3f(d,d,d); //x,y,z
+
+    //front
+    glColor3f(0,1,1);
+    glVertex3f(d,-d,d); //x,y=0,z
+   //glColor3f(1,1,1);
+    glVertex3f(d,d,d); //x,y,z
+    //glColor3f(1,1,0);
+    glVertex3f(-d,d,d); //-x,y,z
+    //glColor3f(0,1,0);
+    glVertex3f(-d,-d,d); //-x,y=0,z
+
+    //back
+    glColor3f(0,0,1);
+    glVertex3f(d,-d,-d); //x,y=0,z
+    //glColor3f(1,0,1);
+    glVertex3f(d,d,-d); //x,y,z
+    //glColor3f(1,0,0);
+    glVertex3f(-d,d,-d); //-x,y,z
+    //glColor3f(0,1,1);
+    glVertex3f(-d,-d,-d); //-x,y=0,z
+    glEnd();
+
+}
+void spindDisplay()
+{
+  spin = spin+15.0;
+  if (spin > 360)
+  spin = spin -359;
+  glutPostRedisplay();
+}
+
+void gameplay()
+{
+
+
+                 if(p2flag==1 && ((pc%2)==0))
                                       {
                                         dice2=(rand()%6)+1;
-                                      if((p2sum+dice2)<=99)
+
+                                            if((p2sum+dice2)>100)
+                                            {
+                                                p2flag=0;
+                                                p1flag=1;
+                                            }
+
+
+                                      if((p2sum+dice2)<=99 && (st2==0))
                                       {
 
 
                                         p2sum+=dice2;
-                                        if(p2sum==4 || p2sum==9 || p2sum==20 || p2sum==34  || p2sum==59 || p2sum==27 || p2sum==70 || p2sum==79 )
+                                        if(p2sum==4 || p2sum==9 || p2sum==20 || p2sum==34  || p2sum==59 || p2sum==27 || p2sum==70 || p2sum==79 || p2sum==35)
 
                                         {
+                                              if(p2sum==35)
+                                                {   p2sum=43;
+                                                    rt2=70*(p2sum%10);
+                                                    up2=85*(p2sum/10);
+
+                                                }
+
 
                                             if(p2sum==4)
                                                 {   p2sum=16;
@@ -720,7 +705,14 @@ void mouse (int button, int state, int x, int y)            //mouse function...
                                             }
                                         else
                                         {
-                                            rt2=70*(p2sum%10);
+                                            if(((p2sum/10)%2)!=0)
+                                                    {
+                                                        rt2=70*(9-(p2sum%10));
+                                                    }
+                                             else
+                                             {
+                                                 rt2=70*(p2sum%10);
+                                             }
                                             up2=85*(p2sum/10);
                                             p2flag=0;
                                             p1flag=1;
@@ -784,10 +776,219 @@ void mouse (int button, int state, int x, int y)            //mouse function...
                                                 }
                                         }
                                     }
-                                      }
-                                }
-                              }
-                              break;
-    default:break;
-  }
+
+                                    if(st2==-70)
+                                    {   if(dice2==6)
+                                        {st2=0;
+                                         p2flag=0;
+                                         p1flag=1;
+                                        }
+                                    }
+                            }
+
+                                      if(p1flag==1  && ((pc%2)==1))
+            {
+                dice1=(rand()%6)+1;
+
+
+                if((p1sum+dice1)>100)
+                                            {
+                                                p1flag=0;
+                                                p2flag=1;
+                                            }
+
+
+                                      //check player reached dest or not
+                                      if((p1sum+dice1)<=99 && (st1==0))
+                                      {
+                                        p1sum+=dice1;
+
+
+
+                                        if(p1sum==4 || p1sum==9 || p1sum==20 || p1sum==34  || p1sum==59 || p1sum==27 || p1sum==70 || p1sum==79 )
+                                        {
+
+                                            if(p1sum==4)
+                                                {   p1sum=16;
+                                                rt1=70*(p1sum%10);
+                                                up1=85*(p1sum/10);
+
+                                                }
+
+                                            if(p1sum==9)
+                                                {   p1sum=39;
+                                                rt1=70*(p1sum%10);
+                                                up1=85*(p1sum/10);
+
+                                                }
+                                            if(p1sum==20)
+                                                {   p1sum=41;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==34)
+                                                {   p1sum=43;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==27)
+                                                {   p1sum=83;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==59)
+                                                {   p1sum=66;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                    }
+                                                  if(p1sum==70)
+                                                {   p1sum=90;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==79)
+                                                {   p1sum=99;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+
+                                                p1flag=0;
+                                                p2flag=1;
+                                                printf("\n%d",p1sum);
+                                            }
+                                        else
+                                        {    if(((p1sum/10)%2)!=0)
+                                                    {
+                                                        rt1=70*(9-(p1sum%10));
+                                                    }
+                                             else
+                                             {
+                                                 rt1=70*(p1sum%10);
+                                             }
+                                            up1=85*(p1sum/10);
+                                            p1flag=0;
+                                            p2flag=1;
+                                            printf("\n%d",p1sum);
+                                        }
+                                        if(p1sum==14 || p1sum==46 || p1sum==48 || p1sum==61 || p1sum==62 || p1sum==86 || p1sum==92 || p1sum==95 || p1sum==97 || p1sum==35)
+                                        {
+
+                                              if(p1sum==35)
+                                                {   p1sum=43;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+
+
+
+                                              if(p1sum==14)
+                                                {   p1sum=5;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==46)
+                                                {   p1sum=25;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==48)
+                                                {   p1sum=29;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==61)
+                                                {   p1sum=11;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==62)
+                                                {   p1sum=50;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==86)
+                                                {   p1sum=23;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==92)
+                                                {   p1sum=72;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==95)
+                                                {   p1sum=75;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                                  if(p1sum==97)
+                                                {   p1sum=77;
+                                                    rt1=70*(p1sum%10);
+                                                    up1=85*(p1sum/10);
+
+                                                }
+                                        }
+                                    }
+
+
+                                    if(st1==-70)
+                                    {   if(dice1==6)
+                                        {   st1=0;
+                                            p1flag=0;
+                                            p2flag=1;
+                                        }
+                                    }
+                }
+}
+
+void diceposition()
+{
+    spin=0;
+
+    if((pc%2)==1) {
+                        if(dice1==1){glColor3f(1.0,0.0,1.0);}
+                        if(dice1==2){glColor3f(0.0,1.0,0.0);}
+                        if(dice1==3){glColor3f(0.0,1.0,1.0);}
+                        if(dice1==4){glColor3f(1.0,0.0,0.0);}
+                        if(dice1==5){glColor3f(0.0,0.0,1.0);}
+                        if(dice1==6){glColor3f(1.0,1.0,0.0);}
+    }
+      if( (pc%2)==0) {
+                        if(dice2==1){glColor3f(1.0,0.0,1.0);}
+                        if(dice2==2){glColor3f(0.0,1.0,0.0);}
+                        if(dice2==3){glColor3f(0.0,1.0,1.0);}
+                        if(dice2==4){glColor3f(1.0,0.0,0.0);}
+                        if(dice2==5){glColor3f(0.0,0.0,1.0);}
+                        if(dice2==6){glColor3f(1.0,1.0,0.0);}
+    }
+
+
+    glBegin(GL_QUADS);
+
+    glVertex3f(d,-d,d); //x,y=0,z
+   //glColor3f(1,1,1);
+    glVertex3f(d,d,d); //x,y,z
+    //glColor3f(1,1,0);
+    glVertex3f(-d,d,d); //-x,y,z
+    //glColor3f(0,1,0);
+    glVertex3f(-d,-d,d); //-x,y=0,z
+
+
+    glEnd();
+
 }
