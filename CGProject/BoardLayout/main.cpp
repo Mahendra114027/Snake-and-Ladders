@@ -52,11 +52,10 @@ int p1sum=0;
 int p2sum=0;
 int pc=0;
 int dp=-1;
-
 float d=50;
 float spin;
 
-
+//image related declarations
 int pixelwidth=700;
 int pixelheight=850;
 int WIDTH=500;
@@ -387,16 +386,6 @@ void windowTwo()
     float ytrans=windowHeight;
     float fontsize=0.13;
 
-    /*glColor3f(1.0,1.0,1.0);
-        glLineWidth(2.0);
-        glBegin(GL_LINE_LOOP);
-            glVertex2f(10,10);
-            glVertex2f(windowWidth-10,10);
-            glVertex2f(windowWidth-10,windowHeight);
-            glVertex2f(10,windowHeight);
-        glEnd();
-    */
-
     glPushMatrix();
     glTranslatef(xtrans,ytrans,0);
     glLineWidth(3.0);
@@ -457,20 +446,19 @@ void windowThree()
     glEnd();
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
+
     drawMesh();
     drawplayer();
+
     glPushMatrix();
         glTranslatef(900.0,200.0,0.0);
         glRotatef(spin, 1.0, 0.5, 1.0);
-    if(dp<0)
-    {
-        drawdice();
-    }
-    if(dp>0)
-    {
-        diceposition();
-    }
+        if(dp<0)
+            drawdice();
+        if(dp>0)
+            diceposition();
     glPopMatrix();
+
     glutSwapBuffers();
 }
 
@@ -524,22 +512,24 @@ void drawplayer()
 
 void mouse (int button, int state, int x, int y)            //mouse function...
 {
-  switch(button) {
-    case GLUT_LEFT_BUTTON:  if(state == GLUT_DOWN)
-                            {   dp=-1;
-                                glutIdleFunc(spindDisplay);
-
-                            }
-                        break;
-    case GLUT_RIGHT_BUTTON: if(state == GLUT_DOWN)
-                              {     dp=2;
-                                  glutIdleFunc(diceposition);
-                                pc++;
-                                gameplay();
-                              }
-                              break;
-    default:break;
-  }
+    switch(button)
+    {
+        case GLUT_LEFT_BUTTON   :   if(state == GLUT_DOWN)
+                                    {
+                                        dp=-1;
+                                        glutIdleFunc(spindDisplay);
+                                    }
+                                    break;
+        case GLUT_RIGHT_BUTTON  :   if(state == GLUT_DOWN)
+                                    {
+                                        dp=2;
+                                        glutIdleFunc(diceposition);
+                                        pc++;
+                                        gameplay();
+                                    }
+                                    break;
+        default                 :   break;
+    }
 }
 
 
@@ -548,80 +538,60 @@ void drawdice()
     glColor3f(1,0,1);
 
     glBegin(GL_QUADS);
-    //top
-    glColor3f(1,0,1);
-    glVertex3f(-d,d,+d); //-x,y,z
-    //glColor3f(1,1,1);
-    glVertex3f(d,d,+d); //x,y,z
-    //glColor3f(1,0,1);
-    glVertex3f(d,d,-d); //x,y,-z
-    //glColor3f(1,0,0);
-    glVertex3f(-d,d,-d); //-x,y,-z
+        //Top of the Dice
+        glColor3f(1,0,1);
+        glVertex3f(-d,d,+d);
+        glVertex3f(d,d,+d);
+        glVertex3f(d,d,-d);
+        glVertex3f(-d,d,-d);
 
-    //bottom
-    glColor3f(1,0,0);
-    glVertex3f(-d,-d,d); //-x,y=0,z
-    //glColor3f(0,1,1);
-    glVertex3f(d,-d,d); //x,y=0,z
-    //glColor3f(0,0,1);
-    glVertex3f(d,-d,-d); //x,y=0,-z
-    //glColor3f(0,1,1);
-    glVertex3f(-d,-d,-d); //-x,y=0,-z
+        //Bottom of the cube
+        glColor3f(1,0,0);
+        glVertex3f(-d,-d,d);
+        glVertex3f(d,-d,d);
+        glVertex3f(d,-d,-d);
+        glVertex3f(-d,-d,-d);
 
-    //left
-    glColor3f(0,1,0);
-    glVertex3f(-d,-d,d); //-x,y=0,z
-    //glColor3f(0,1,1);
-    glVertex3f(-d,-d,-d); //-x,y=0,-z
-    //glColor3f(1,0,0);
-    glVertex3f(-d,d,-d); //-x,y,-z
-    //glColor3f(1,1,0);
-    glVertex3f(-d,d,d); //-x,y,z
+        //Left of the cube
+        glColor3f(0,1,0);
+        glVertex3f(-d,-d,d);
+        glVertex3f(-d,-d,-d);
+        glVertex3f(-d,d,-d);
+        glVertex3f(-d,d,d);
 
-    //right
-    glColor3f(1,1,0);
-    glVertex3f(d,-d,d); //x,y=0,z
-    //glColor3f(0,0,1);
-    glVertex3f(d,-d,-d); //x,y=0,-z
-    //glColor3f(1,0,1);
-    glVertex3f(d,d,-d); //x,y,-z
-    //glColor3f(1,1,1);
-    glVertex3f(d,d,d); //x,y,z
+        //Right of the cube
+        glColor3f(1,1,0);
+        glVertex3f(d,-d,d);
+        glVertex3f(d,-d,-d);
+        glVertex3f(d,d,-d);
+        glVertex3f(d,d,d);
 
-    //front
-    glColor3f(0,1,1);
-    glVertex3f(d,-d,d); //x,y=0,z
-   //glColor3f(1,1,1);
-    glVertex3f(d,d,d); //x,y,z
-    //glColor3f(1,1,0);
-    glVertex3f(-d,d,d); //-x,y,z
-    //glColor3f(0,1,0);
-    glVertex3f(-d,-d,d); //-x,y=0,z
+        //Front of the cube
+        glColor3f(0,1,1);
+        glVertex3f(d,-d,d);
+        glVertex3f(d,d,d);
+        glVertex3f(-d,d,d);
+        glVertex3f(-d,-d,d);
 
-    //back
-    glColor3f(0,0,1);
-    glVertex3f(d,-d,-d); //x,y=0,z
-    //glColor3f(1,0,1);
-    glVertex3f(d,d,-d); //x,y,z
-    //glColor3f(1,0,0);
-    glVertex3f(-d,d,-d); //-x,y,z
-    //glColor3f(0,1,1);
-    glVertex3f(-d,-d,-d); //-x,y=0,z
+        //Back of the cube
+        glColor3f(0,0,1);
+        glVertex3f(d,-d,-d);
+        glVertex3f(d,d,-d);
+        glVertex3f(-d,d,-d);
+        glVertex3f(-d,-d,-d);
+
     glEnd();
-
 }
 void spindDisplay()
 {
-  spin = spin+15.0;
-  if (spin > 360)
-  spin = spin -359;
-  glutPostRedisplay();
+    spin = spin+15.0;
+    if(spin > 360)
+        spin-=359;
+    glutPostRedisplay();
 }
 
 void gameplay()
 {
-
-
                  if(p2flag==1 && ((pc%2)==0))
                                       {
                                         dice2=(rand()%6)+1;
