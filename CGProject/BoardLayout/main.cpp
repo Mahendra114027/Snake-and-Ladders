@@ -44,15 +44,13 @@ int windowWidth;
 int windowHeight;
 int flag=0;
 bool window2=false,window3=false,window4=false;
-int dice1,dice2;
-int p1flag=1;
-int p2flag=0;
-float rt1=0,up1=0,rt2=0,up2=0,st1=-70,st2=-70;
-int p1sum=0;
-int p2sum=0;
-int pc=0;
-int dp=-1;
-float d=50;
+int dice[4];
+int player_flag[4]={1,0,0,0};
+float right_movement[4]={0.0},up_movement[4]={0},start[4]={-70};
+int player_sum[4]={0};
+int pc_flag=0;
+int dice_position=-1;
+float dice_dimension=50;
 float spin;
 
 //image related declarations
@@ -453,9 +451,9 @@ void windowThree()
     glPushMatrix();
         glTranslatef(900.0,200.0,0.0);
         glRotatef(spin, 1.0, 0.5, 1.0);
-        if(dp<0)
+        if(dice_position<0)
             drawdice();
-        if(dp>0)
+        if(dice_position>0)
             diceposition();
     glPopMatrix();
 
@@ -489,11 +487,11 @@ void drawplayer()
         glColor3f(1.0,0.0,1.0);
         glBegin(GL_POLYGON);
         int pi=3.14;
-        float th=0,r=25;
+        float theta=0,radius=25;
         for(int i=0;i<360;i++){
-            glVertex3f((r*cos((pi/(float)180)*th))+35+rt1+st1,(r*sin((pi/(float)180)*th))+42.5+up1,-100);
+            glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[0]+start[0],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[0],-100);
 
-            th=th+1;
+            theta+=1;
         }
         glEnd();
 
@@ -502,12 +500,24 @@ void drawplayer()
         glBegin(GL_POLYGON);
 
         for(int i=0;i<360;i++){
-            glVertex3f((r*cos((pi/(float)180)*th))+35+rt2+st2,(r*sin((pi/(float)180)*th))+42.5+up2,-100);
+            glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[1]+start[1],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[1],-100);
 
-            th=th+1;
+            theta+=1;
         }
         glEnd();
 
+}
+
+int generate_num()
+{
+    int chancenum,dicenum;
+    chancenum=rand()%6;
+    if(chancenum==0)
+        dicenum=generate_num();
+    else
+        dicenum=chancenum;
+    printf("dicenum:%d\n",dicenum);
+    return dicenum;
 }
 
 void mouse (int button, int state, int x, int y)            //mouse function...
@@ -516,15 +526,15 @@ void mouse (int button, int state, int x, int y)            //mouse function...
     {
         case GLUT_LEFT_BUTTON   :   if(state == GLUT_DOWN)
                                     {
-                                        dp=-1;
+                                        dice_position=-1;
                                         glutIdleFunc(spindDisplay);
                                     }
                                     break;
         case GLUT_RIGHT_BUTTON  :   if(state == GLUT_DOWN)
                                     {
-                                        dp=2;
+                                        dice_position=2;
                                         glutIdleFunc(diceposition);
-                                        pc++;
+                                        pc_flag++;
                                         gameplay();
                                     }
                                     break;
@@ -540,51 +550,51 @@ void drawdice()
     glBegin(GL_QUADS);
         //Top of the Dice
         glColor3f(1,0,1);
-        glVertex3f(-d,d,+d);
-        glVertex3f(d,d,+d);
-        glVertex3f(d,d,-d);
-        glVertex3f(-d,d,-d);
+        glVertex3f(-dice_dimension,dice_dimension,+dice_dimension);
+        glVertex3f(dice_dimension,dice_dimension,+dice_dimension);
+        glVertex3f(dice_dimension,dice_dimension,-dice_dimension);
+        glVertex3f(-dice_dimension,dice_dimension,-dice_dimension);
 
         //Bottom of the cube
         glColor3f(1,0,0);
-        glVertex3f(-d,-d,d);
-        glVertex3f(d,-d,d);
-        glVertex3f(d,-d,-d);
-        glVertex3f(-d,-d,-d);
+        glVertex3f(-dice_dimension,-dice_dimension,dice_dimension);
+        glVertex3f(dice_dimension,-dice_dimension,dice_dimension);
+        glVertex3f(dice_dimension,-dice_dimension,-dice_dimension);
+        glVertex3f(-dice_dimension,-dice_dimension,-dice_dimension);
 
         //Left of the cube
         glColor3f(0,1,0);
-        glVertex3f(-d,-d,d);
-        glVertex3f(-d,-d,-d);
-        glVertex3f(-d,d,-d);
-        glVertex3f(-d,d,d);
+        glVertex3f(-dice_dimension,-dice_dimension,dice_dimension);
+        glVertex3f(-dice_dimension,-dice_dimension,-dice_dimension);
+        glVertex3f(-dice_dimension,dice_dimension,-dice_dimension);
+        glVertex3f(-dice_dimension,dice_dimension,dice_dimension);
 
         //Right of the cube
         glColor3f(1,1,0);
-        glVertex3f(d,-d,d);
-        glVertex3f(d,-d,-d);
-        glVertex3f(d,d,-d);
-        glVertex3f(d,d,d);
+        glVertex3f(dice_dimension,-dice_dimension,dice_dimension);
+        glVertex3f(dice_dimension,-dice_dimension,-dice_dimension);
+        glVertex3f(dice_dimension,dice_dimension,-dice_dimension);
+        glVertex3f(dice_dimension,dice_dimension,dice_dimension);
 
         //Front of the cube
         glColor3f(0,1,1);
-        glVertex3f(d,-d,d);
-        glVertex3f(d,d,d);
-        glVertex3f(-d,d,d);
-        glVertex3f(-d,-d,d);
+        glVertex3f(dice_dimension,-dice_dimension,dice_dimension);
+        glVertex3f(dice_dimension,dice_dimension,dice_dimension);
+        glVertex3f(-dice_dimension,dice_dimension,dice_dimension);
+        glVertex3f(-dice_dimension,-dice_dimension,dice_dimension);
 
         //Back of the cube
         glColor3f(0,0,1);
-        glVertex3f(d,-d,-d);
-        glVertex3f(d,d,-d);
-        glVertex3f(-d,d,-d);
-        glVertex3f(-d,-d,-d);
+        glVertex3f(dice_dimension,-dice_dimension,-dice_dimension);
+        glVertex3f(dice_dimension,dice_dimension,-dice_dimension);
+        glVertex3f(-dice_dimension,dice_dimension,-dice_dimension);
+        glVertex3f(-dice_dimension,-dice_dimension,-dice_dimension);
 
     glEnd();
 }
 void spindDisplay()
 {
-    spin = spin+15.0;
+    spin = spin+50.0;
     if(spin > 360)
         spin-=359;
     glutPostRedisplay();
@@ -592,335 +602,335 @@ void spindDisplay()
 
 void gameplay()
 {
-                 if(p2flag==1 && ((pc%2)==0))
+                 if(player_flag[1]==1 && ((pc_flag%2)==0))
                                       {
-                                        dice2=(rand()%6)+1;
+                                        dice[1]=generate_num();
 
-                                            if((p2sum+dice2)>100)
+                                            if((player_sum[1]+dice[1])>100)
                                             {
-                                                p2flag=0;
-                                                p1flag=1;
+                                                player_flag[1]=0;
+                                                player_flag[0]=1;
                                             }
 
 
-                                      if((p2sum+dice2)<=99 && (st2==0))
+                                      if((player_sum[1]+dice[1])<=99 && (start[1]==0))
                                       {
 
 
-                                        p2sum+=dice2;
-                                        if(p2sum==4 || p2sum==9 || p2sum==20 || p2sum==34  || p2sum==59 || p2sum==27 || p2sum==70 || p2sum==79 || p2sum==35)
+                                        player_sum[1]+=dice[1];
+                                        if(player_sum[1]==4 || player_sum[1]==9 || player_sum[1]==20 || player_sum[1]==34  || player_sum[1]==59 || player_sum[1]==27 || player_sum[1]==70 || player_sum[1]==79 || player_sum[1]==35)
 
                                         {
-                                              if(p2sum==35)
-                                                {   p2sum=43;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                              if(player_sum[1]==35)
+                                                {   player_sum[1]=43;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
 
 
-                                            if(p2sum==4)
-                                                {   p2sum=16;
-                                                rt2=70*(p2sum%10);
-                                                up2=85*(p2sum/10);
+                                            if(player_sum[1]==4)
+                                                {   player_sum[1]=16;
+                                                right_movement[1]=70*(player_sum[1]%10);
+                                                up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
 
-                                            if(p2sum==9)
-                                                {   p2sum=39;
-                                                rt2=70*(p2sum%10);
-                                                up2=85*(p2sum/10);
+                                            if(player_sum[1]==9)
+                                                {   player_sum[1]=39;
+                                                right_movement[1]=70*(player_sum[1]%10);
+                                                up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                            if(p2sum==20)
-                                                {   p2sum=41;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                            if(player_sum[1]==20)
+                                                {   player_sum[1]=41;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==34)
-                                                {   p2sum=43;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==34)
+                                                {   player_sum[1]=43;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==27)
-                                                {   p2sum=83;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==27)
+                                                {   player_sum[1]=83;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==59)
-                                                {   p2sum=66;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==59)
+                                                {   player_sum[1]=66;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                     }
-                                                  if(p2sum==70)
-                                                {   p2sum=90;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==70)
+                                                {   player_sum[1]=90;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==79)
-                                                {   p2sum=99;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==79)
+                                                {   player_sum[1]=99;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
 
-                                                p2flag=0;
-                                                p1flag=1;
-                                                printf("\n%d@@@",p2sum);
+                                                player_flag[1]=0;
+                                                player_flag[0]=1;
+                                                printf("\n%d@@@",player_sum[1]);
                                             }
                                         else
                                         {
-                                            if(((p2sum/10)%2)!=0)
+                                            if(((player_sum[1]/10)%2)!=0)
                                                     {
-                                                        rt2=70*(9-(p2sum%10));
+                                                        right_movement[1]=70*(9-(player_sum[1]%10));
                                                     }
                                              else
                                              {
-                                                 rt2=70*(p2sum%10);
+                                                 right_movement[1]=70*(player_sum[1]%10);
                                              }
-                                            up2=85*(p2sum/10);
-                                            p2flag=0;
-                                            p1flag=1;
-                                            printf("\n%d@@@",p2sum);
+                                            up_movement[1]=85*(player_sum[1]/10);
+                                            player_flag[1]=0;
+                                            player_flag[0]=1;
+                                            printf("\n%d@@@",player_sum[1]);
                                         }
-                                        if(p2sum==14 || p2sum==46 || p2sum==48 || p2sum==61 || p2sum==62 || p2sum==86 || p2sum==92 || p2sum==95 || p2sum==97)
+                                        if(player_sum[1]==14 || player_sum[1]==46 || player_sum[1]==48 || player_sum[1]==61 || player_sum[1]==62 || player_sum[1]==86 || player_sum[1]==92 || player_sum[1]==95 || player_sum[1]==97)
                                         {
-                                              if(p2sum==14)
-                                                {   p2sum=5;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                              if(player_sum[1]==14)
+                                                {   player_sum[1]=5;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==46)
-                                                {   p2sum=25;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==46)
+                                                {   player_sum[1]=25;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==48)
-                                                {   p2sum=29;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==48)
+                                                {   player_sum[1]=29;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==61)
-                                                {   p2sum=11;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==61)
+                                                {   player_sum[1]=11;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==62)
-                                                {   p2sum=50;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==62)
+                                                {   player_sum[1]=50;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==86)
-                                                {   p2sum=23;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==86)
+                                                {   player_sum[1]=23;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==92)
-                                                {   p2sum=72;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==92)
+                                                {   player_sum[1]=72;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==95)
-                                                {   p2sum=75;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==95)
+                                                {   player_sum[1]=75;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
-                                                  if(p2sum==97)
-                                                {   p2sum=77;
-                                                    rt2=70*(p2sum%10);
-                                                    up2=85*(p2sum/10);
+                                                  if(player_sum[1]==97)
+                                                {   player_sum[1]=77;
+                                                    right_movement[1]=70*(player_sum[1]%10);
+                                                    up_movement[1]=85*(player_sum[1]/10);
 
                                                 }
                                         }
                                     }
 
-                                    if(st2==-70)
-                                    {   if(dice2==6)
-                                        {st2=0;
-                                         p2flag=0;
-                                         p1flag=1;
+                                    if(start[1]==-70)
+                                    {   if(dice[1]==6)
+                                        {start[1]=0;
+                                         player_flag[1]=0;
+                                         player_flag[0]=1;
                                         }
                                     }
                             }
 
-                                      if(p1flag==1  && ((pc%2)==1))
+                                      if(player_flag[0]==1  && ((pc_flag%2)==1))
             {
-                dice1=(rand()%6)+1;
+                dice[0]=(rand()%6)+1;
 
 
-                if((p1sum+dice1)>100)
+                if((player_sum[0]+dice[0])>100)
                                             {
-                                                p1flag=0;
-                                                p2flag=1;
+                                                player_flag[0]=0;
+                                                player_flag[1]=1;
                                             }
 
 
                                       //check player reached dest or not
-                                      if((p1sum+dice1)<=99 && (st1==0))
+                                      if((player_sum[0]+dice[0])<=99 && (start[0]==0))
                                       {
-                                        p1sum+=dice1;
+                                        player_sum[0]+=dice[0];
 
 
 
-                                        if(p1sum==4 || p1sum==9 || p1sum==20 || p1sum==34  || p1sum==59 || p1sum==27 || p1sum==70 || p1sum==79 )
+                                        if(player_sum[0]==4 || player_sum[0]==9 || player_sum[0]==20 || player_sum[0]==34  || player_sum[0]==59 || player_sum[0]==27 || player_sum[0]==70 || player_sum[0]==79 )
                                         {
 
-                                            if(p1sum==4)
-                                                {   p1sum=16;
-                                                rt1=70*(p1sum%10);
-                                                up1=85*(p1sum/10);
+                                            if(player_sum[0]==4)
+                                                {   player_sum[0]=16;
+                                                right_movement[0]=70*(player_sum[0]%10);
+                                                up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
 
-                                            if(p1sum==9)
-                                                {   p1sum=39;
-                                                rt1=70*(p1sum%10);
-                                                up1=85*(p1sum/10);
+                                            if(player_sum[0]==9)
+                                                {   player_sum[0]=39;
+                                                right_movement[0]=70*(player_sum[0]%10);
+                                                up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                            if(p1sum==20)
-                                                {   p1sum=41;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                            if(player_sum[0]==20)
+                                                {   player_sum[0]=41;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==34)
-                                                {   p1sum=43;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==34)
+                                                {   player_sum[0]=43;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==27)
-                                                {   p1sum=83;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==27)
+                                                {   player_sum[0]=83;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==59)
-                                                {   p1sum=66;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==59)
+                                                {   player_sum[0]=66;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                     }
-                                                  if(p1sum==70)
-                                                {   p1sum=90;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==70)
+                                                {   player_sum[0]=90;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==79)
-                                                {   p1sum=99;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==79)
+                                                {   player_sum[0]=99;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
 
-                                                p1flag=0;
-                                                p2flag=1;
-                                                printf("\n%d",p1sum);
+                                                player_flag[0]=0;
+                                                player_flag[1]=1;
+                                                printf("\n%d",player_sum[0]);
                                             }
                                         else
-                                        {    if(((p1sum/10)%2)!=0)
+                                        {    if(((player_sum[0]/10)%2)!=0)
                                                     {
-                                                        rt1=70*(9-(p1sum%10));
+                                                        right_movement[0]=70*(9-(player_sum[0]%10));
                                                     }
                                              else
                                              {
-                                                 rt1=70*(p1sum%10);
+                                                 right_movement[0]=70*(player_sum[0]%10);
                                              }
-                                            up1=85*(p1sum/10);
-                                            p1flag=0;
-                                            p2flag=1;
-                                            printf("\n%d",p1sum);
+                                            up_movement[0]=85*(player_sum[0]/10);
+                                            player_flag[0]=0;
+                                            player_flag[1]=1;
+                                            printf("\n%d",player_sum[0]);
                                         }
-                                        if(p1sum==14 || p1sum==46 || p1sum==48 || p1sum==61 || p1sum==62 || p1sum==86 || p1sum==92 || p1sum==95 || p1sum==97 || p1sum==35)
+                                        if(player_sum[0]==14 || player_sum[0]==46 || player_sum[0]==48 || player_sum[0]==61 || player_sum[0]==62 || player_sum[0]==86 || player_sum[0]==92 || player_sum[0]==95 || player_sum[0]==97 || player_sum[0]==35)
                                         {
 
-                                              if(p1sum==35)
-                                                {   p1sum=43;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                              if(player_sum[0]==35)
+                                                {   player_sum[0]=43;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
 
 
 
-                                              if(p1sum==14)
-                                                {   p1sum=5;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                              if(player_sum[0]==14)
+                                                {   player_sum[0]=5;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==46)
-                                                {   p1sum=25;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==46)
+                                                {   player_sum[0]=25;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==48)
-                                                {   p1sum=29;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==48)
+                                                {   player_sum[0]=29;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==61)
-                                                {   p1sum=11;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==61)
+                                                {   player_sum[0]=11;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==62)
-                                                {   p1sum=50;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==62)
+                                                {   player_sum[0]=50;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==86)
-                                                {   p1sum=23;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==86)
+                                                {   player_sum[0]=23;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==92)
-                                                {   p1sum=72;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==92)
+                                                {   player_sum[0]=72;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==95)
-                                                {   p1sum=75;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==95)
+                                                {   player_sum[0]=75;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
-                                                  if(p1sum==97)
-                                                {   p1sum=77;
-                                                    rt1=70*(p1sum%10);
-                                                    up1=85*(p1sum/10);
+                                                  if(player_sum[0]==97)
+                                                {   player_sum[0]=77;
+                                                    right_movement[0]=70*(player_sum[0]%10);
+                                                    up_movement[0]=85*(player_sum[0]/10);
 
                                                 }
                                         }
                                     }
 
 
-                                    if(st1==-70)
-                                    {   if(dice1==6)
-                                        {   st1=0;
-                                            p1flag=0;
-                                            p2flag=1;
+                                    if(start[0]==-70)
+                                    {   if(dice[0]==6)
+                                        {   start[0]=0;
+                                            player_flag[0]=0;
+                                            player_flag[1]=1;
                                         }
                                     }
                 }
@@ -930,33 +940,33 @@ void diceposition()
 {
     spin=0;
 
-    if((pc%2)==1) {
-                        if(dice1==1){glColor3f(1.0,0.0,1.0);}
-                        if(dice1==2){glColor3f(0.0,1.0,0.0);}
-                        if(dice1==3){glColor3f(0.0,1.0,1.0);}
-                        if(dice1==4){glColor3f(1.0,0.0,0.0);}
-                        if(dice1==5){glColor3f(0.0,0.0,1.0);}
-                        if(dice1==6){glColor3f(1.0,1.0,0.0);}
+    if((pc_flag%2)==1) {
+                        if(dice[0]==1){glColor3f(1.0,0.0,1.0);}
+                        if(dice[0]==2){glColor3f(0.0,1.0,0.0);}
+                        if(dice[0]==3){glColor3f(0.0,1.0,1.0);}
+                        if(dice[0]==4){glColor3f(1.0,0.0,0.0);}
+                        if(dice[0]==5){glColor3f(0.0,0.0,1.0);}
+                        if(dice[0]==6){glColor3f(1.0,1.0,0.0);}
     }
-      if( (pc%2)==0) {
-                        if(dice2==1){glColor3f(1.0,0.0,1.0);}
-                        if(dice2==2){glColor3f(0.0,1.0,0.0);}
-                        if(dice2==3){glColor3f(0.0,1.0,1.0);}
-                        if(dice2==4){glColor3f(1.0,0.0,0.0);}
-                        if(dice2==5){glColor3f(0.0,0.0,1.0);}
-                        if(dice2==6){glColor3f(1.0,1.0,0.0);}
+      if( (pc_flag%2)==0) {
+                        if(dice[1]==1){glColor3f(1.0,0.0,1.0);}
+                        if(dice[1]==2){glColor3f(0.0,1.0,0.0);}
+                        if(dice[1]==3){glColor3f(0.0,1.0,1.0);}
+                        if(dice[1]==4){glColor3f(1.0,0.0,0.0);}
+                        if(dice[1]==5){glColor3f(0.0,0.0,1.0);}
+                        if(dice[1]==6){glColor3f(1.0,1.0,0.0);}
     }
 
 
     glBegin(GL_QUADS);
 
-    glVertex3f(d,-d,d); //x,y=0,z
+    glVertex3f(dice_dimension,-dice_dimension,dice_dimension); //x,y=0,z
    //glColor3f(1,1,1);
-    glVertex3f(d,d,d); //x,y,z
+    glVertex3f(dice_dimension,dice_dimension,dice_dimension); //x,y,z
     //glColor3f(1,1,0);
-    glVertex3f(-d,d,d); //-x,y,z
+    glVertex3f(-dice_dimension,dice_dimension,dice_dimension); //-x,y,z
     //glColor3f(0,1,0);
-    glVertex3f(-d,-d,d); //-x,y=0,z
+    glVertex3f(-dice_dimension,-dice_dimension,dice_dimension); //-x,y=0,z
 
 
     glEnd();
