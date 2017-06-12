@@ -52,6 +52,9 @@ int pc_flag=0;
 int dice_position=-1;
 float dice_dimension=50;
 float spin;
+int snake_pos[101];
+int stair_pos[101];
+
 
 //image related declarations
 int pixelwidth=700;
@@ -602,338 +605,62 @@ void spindDisplay()
 
 void gameplay()
 {
-                 if(player_flag[1]==1 && ((pc_flag%2)==0))
-                                      {
-                                        dice[1]=generate_num();
-
-                                            if((player_sum[1]+dice[1])>100)
-                                            {
-                                                player_flag[1]=0;
-                                                player_flag[0]=1;
-                                            }
+    //snake positions={{16,6},{47,26},{49,30},{56,53},{62,19},{63,60},{87,24},{93,73},{95,75},{98,75}}
+    //ladders positions={{1,38},{4,14},{9,31},{21,42},{28,84},{36,44},{51,67},{71,91},{80,100}}
 
 
-                                      if((player_sum[1]+dice[1])<=99 && (start[1]==0))
-                                      {
-
-
-                                        player_sum[1]+=dice[1];
-                                        if(player_sum[1]==4 || player_sum[1]==9 || player_sum[1]==20 || player_sum[1]==34  || player_sum[1]==59 || player_sum[1]==27 || player_sum[1]==70 || player_sum[1]==79 || player_sum[1]==35)
-
-                                        {
-                                              if(player_sum[1]==35)
-                                                {   player_sum[1]=43;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-
-
-                                            if(player_sum[1]==4)
-                                                {   player_sum[1]=16;
-                                                right_movement[1]=70*(player_sum[1]%10);
-                                                up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-
-                                            if(player_sum[1]==9)
-                                                {   player_sum[1]=39;
-                                                right_movement[1]=70*(player_sum[1]%10);
-                                                up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                            if(player_sum[1]==20)
-                                                {   player_sum[1]=41;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==34)
-                                                {   player_sum[1]=43;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==27)
-                                                {   player_sum[1]=83;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==59)
-                                                {   player_sum[1]=66;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                    }
-                                                  if(player_sum[1]==70)
-                                                {   player_sum[1]=90;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==79)
-                                                {   player_sum[1]=99;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-
-                                                player_flag[1]=0;
-                                                player_flag[0]=1;
-                                                printf("\n%d@@@",player_sum[1]);
-                                            }
-                                        else
-                                        {
-                                            if(((player_sum[1]/10)%2)!=0)
-                                                    {
-                                                        right_movement[1]=70*(9-(player_sum[1]%10));
-                                                    }
-                                             else
-                                             {
-                                                 right_movement[1]=70*(player_sum[1]%10);
-                                             }
-                                            up_movement[1]=85*(player_sum[1]/10);
-                                            player_flag[1]=0;
-                                            player_flag[0]=1;
-                                            printf("\n%d@@@",player_sum[1]);
-                                        }
-                                        if(player_sum[1]==14 || player_sum[1]==46 || player_sum[1]==48 || player_sum[1]==61 || player_sum[1]==62 || player_sum[1]==86 || player_sum[1]==92 || player_sum[1]==95 || player_sum[1]==97)
-                                        {
-                                              if(player_sum[1]==14)
-                                                {   player_sum[1]=5;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==46)
-                                                {   player_sum[1]=25;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==48)
-                                                {   player_sum[1]=29;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==61)
-                                                {   player_sum[1]=11;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==62)
-                                                {   player_sum[1]=50;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==86)
-                                                {   player_sum[1]=23;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==92)
-                                                {   player_sum[1]=72;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==95)
-                                                {   player_sum[1]=75;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                                  if(player_sum[1]==97)
-                                                {   player_sum[1]=77;
-                                                    right_movement[1]=70*(player_sum[1]%10);
-                                                    up_movement[1]=85*(player_sum[1]/10);
-
-                                                }
-                                        }
-                                    }
-
-                                    if(start[1]==-70)
-                                    {   if(dice[1]==6)
-                                        {start[1]=0;
-                                         player_flag[1]=0;
-                                         player_flag[0]=1;
-                                        }
-                                    }
-                            }
-
-                                      if(player_flag[0]==1  && ((pc_flag%2)==1))
+    stair_pos[1]=38;stair_pos[4]=14;stair_pos[9]=31;stair_pos[21]=42;stair_pos[28]=84;stair_pos[36]=44;stair_pos[51]=67;stair_pos[71]=91;stair_pos[80]=100;
+    snake_pos[16]=6;snake_pos[47]=26;snake_pos[49]=30;snake_pos[56]=53;snake_pos[62]=19;snake_pos[63]=60;snake_pos[87]=24;snake_pos[93]=73;snake_pos[98]=75;
+    for(int i=0;i<numplayers;i++)
+    {
+        if(player_flag[i]==1)
+        {
+            dice[i]=generate_num();
+            
+            if((player_sum[i]+dice[i])<=100)
             {
-                dice[0]=(rand()%6)+1;
-
-
-                if((player_sum[0]+dice[0])>100)
-                                            {
-                                                player_flag[0]=0;
-                                                player_flag[1]=1;
-                                            }
-
-
-                                      //check player reached dest or not
-                                      if((player_sum[0]+dice[0])<=99 && (start[0]==0))
-                                      {
-                                        player_sum[0]+=dice[0];
-
-
-
-                                        if(player_sum[0]==4 || player_sum[0]==9 || player_sum[0]==20 || player_sum[0]==34  || player_sum[0]==59 || player_sum[0]==27 || player_sum[0]==70 || player_sum[0]==79 )
-                                        {
-
-                                            if(player_sum[0]==4)
-                                                {   player_sum[0]=16;
-                                                right_movement[0]=70*(player_sum[0]%10);
-                                                up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-
-                                            if(player_sum[0]==9)
-                                                {   player_sum[0]=39;
-                                                right_movement[0]=70*(player_sum[0]%10);
-                                                up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                            if(player_sum[0]==20)
-                                                {   player_sum[0]=41;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==34)
-                                                {   player_sum[0]=43;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==27)
-                                                {   player_sum[0]=83;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==59)
-                                                {   player_sum[0]=66;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                    }
-                                                  if(player_sum[0]==70)
-                                                {   player_sum[0]=90;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==79)
-                                                {   player_sum[0]=99;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-
-                                                player_flag[0]=0;
-                                                player_flag[1]=1;
-                                                printf("\n%d",player_sum[0]);
-                                            }
-                                        else
-                                        {    if(((player_sum[0]/10)%2)!=0)
-                                                    {
-                                                        right_movement[0]=70*(9-(player_sum[0]%10));
-                                                    }
-                                             else
-                                             {
-                                                 right_movement[0]=70*(player_sum[0]%10);
-                                             }
-                                            up_movement[0]=85*(player_sum[0]/10);
-                                            player_flag[0]=0;
-                                            player_flag[1]=1;
-                                            printf("\n%d",player_sum[0]);
-                                        }
-                                        if(player_sum[0]==14 || player_sum[0]==46 || player_sum[0]==48 || player_sum[0]==61 || player_sum[0]==62 || player_sum[0]==86 || player_sum[0]==92 || player_sum[0]==95 || player_sum[0]==97 || player_sum[0]==35)
-                                        {
-
-                                              if(player_sum[0]==35)
-                                                {   player_sum[0]=43;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-
-
-
-                                              if(player_sum[0]==14)
-                                                {   player_sum[0]=5;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==46)
-                                                {   player_sum[0]=25;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==48)
-                                                {   player_sum[0]=29;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==61)
-                                                {   player_sum[0]=11;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==62)
-                                                {   player_sum[0]=50;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==86)
-                                                {   player_sum[0]=23;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==92)
-                                                {   player_sum[0]=72;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==95)
-                                                {   player_sum[0]=75;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                                  if(player_sum[0]==97)
-                                                {   player_sum[0]=77;
-                                                    right_movement[0]=70*(player_sum[0]%10);
-                                                    up_movement[0]=85*(player_sum[0]/10);
-
-                                                }
-                                        }
-                                    }
-
-
-                                    if(start[0]==-70)
-                                    {   if(dice[0]==6)
-                                        {   start[0]=0;
-                                            player_flag[0]=0;
-                                            player_flag[1]=1;
-                                        }
-                                    }
+                player_sum[i]+=dice[i];
+                // ladder check
+                if(stair_pos[player_sum[i]]!=0)
+                {
+                    // stair found
+                    player_sum[i]=stair_pos[player_sum[i]];
                 }
+                // snake check
+                if(snake_pos[player_sum[i]]!=0)
+                {
+                    // snake found
+                    player_sum[i]=snake_pos[player_sum[i]];
+                }
+                if(((player_sum[i]/10)%2)!=0)
+                {
+                    right_movement[i]=70*(9-(player_sum[i]%10));
+                }
+                else
+                {
+                    right_movement[i]=70*(player_sum[i]%10);
+                }
+                up_movement[i]=85*(player_sum[i]/10);
+                //Chance of next player
+                player_flag[i]=0;
+                player_flag[i+1]=1;
+                if(start[i]==-70)
+                {   
+                    if(dice[i]==6)
+                    {
+                        start[i]=0;
+                        player_flag[i]=0;
+                        player_flag[i+1]=1;
+                    }
+                }
+            }
+            else
+            {
+                player_flag[i]=0;
+                player_flag[i+1]=1;
+            }
+        }
+    }
 }
 
 void diceposition()
