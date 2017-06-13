@@ -794,46 +794,47 @@ void diceposition()
     //Player 1
     if((pc_counter%numplayers)==0)
     {
-                        if(dice[0]==1){glColor3f(1.0,0.0,1.0);}
-                        if(dice[0]==2){glColor3f(0.0,1.0,0.0);}
-                        if(dice[0]==3){glColor3f(0.0,1.0,1.0);}
-                        if(dice[0]==4){glColor3f(1.0,0.0,0.0);}
-                        if(dice[0]==5){glColor3f(0.0,0.0,1.0);}
-                        if(dice[0]==6){glColor3f(1.0,1.0,0.0);}
+                        if(dice[0]==1)  {glColor3f(1.0,0.0,1.0);}
+                        if(dice[0]==2)  {glColor3f(0.0,1.0,0.0);}
+                        if(dice[0]==3)  {glColor3f(0.0,1.0,1.0);}
+                        if(dice[0]==4)  {glColor3f(1.0,0.0,0.0);}
+                        if(dice[0]==5)  {glColor3f(0.0,0.0,1.0);}
+                        if(dice[0]==6)  {glColor3f(1.0,1.0,0.0);}
     }
 
     //Player 2
     if((pc_counter%numplayers)==1)
     {
-                        if(dice[1]==1){glColor3f(1.0,0.0,1.0);}
-                        if(dice[1]==2){glColor3f(0.0,1.0,0.0);}
-                        if(dice[1]==3){glColor3f(0.0,1.0,1.0);}
-                        if(dice[1]==4){glColor3f(1.0,0.0,0.0);}
-                        if(dice[1]==5){glColor3f(0.0,0.0,1.0);}
-                        if(dice[1]==6){glColor3f(1.0,1.0,0.0);}
+                        if(dice[1]==1)  {glColor3f(1.0,0.0,1.0);}
+                        if(dice[1]==2)  {glColor3f(0.0,1.0,0.0);}
+                        if(dice[1]==3)  {glColor3f(0.0,1.0,1.0);}
+                        if(dice[1]==4)  {glColor3f(1.0,0.0,0.0);}
+                        if(dice[1]==5)  {glColor3f(0.0,0.0,1.0);}
+                        if(dice[1]==6)  {glColor3f(1.0,1.0,0.0);}
     }
 
     //Player 3
     if((pc_counter%numplayers)==2)
     {
-                        if(dice[2]==1){glColor3f(1.0,0.0,1.0);}
-                        if(dice[2]==2){glColor3f(0.0,1.0,0.0);}
-                        if(dice[2]==3){glColor3f(0.0,1.0,1.0);}
-                        if(dice[2]==4){glColor3f(1.0,0.0,0.0);}
-                        if(dice[2]==5){glColor3f(0.0,0.0,1.0);}
-                        if(dice[2]==6){glColor3f(1.0,1.0,0.0);}
+                        if(dice[2]==1)  {glColor3f(1.0,0.0,1.0);}
+                        if(dice[2]==2)  {glColor3f(0.0,1.0,0.0);}
+                        if(dice[2]==3)  {glColor3f(0.0,1.0,1.0);}
+                        if(dice[2]==4)  {glColor3f(1.0,0.0,0.0);}
+                        if(dice[2]==5)  {glColor3f(0.0,0.0,1.0);}
+                        if(dice[2]==6)  {glColor3f(1.0,1.0,0.0);}
     }
 
     //Player 4
     if((pc_counter%numplayers)==3)
     {
-                         if(dice[3]==1){glColor3f(1.0,0.0,1.0);}
-                        if(dice[3]==2){glColor3f(0.0,1.0,0.0);}
-                        if(dice[3]==3){glColor3f(0.0,1.0,1.0);}
-                        if(dice[3]==4){glColor3f(1.0,0.0,0.0);}
-                        if(dice[3]==5){glColor3f(0.0,0.0,1.0);}
-                        if(dice[3]==6){glColor3f(1.0,1.0,0.0);}
+                        if(dice[3]==1)  {glColor3f(1.0,0.0,1.0);}
+                        if(dice[3]==2)  {glColor3f(0.0,1.0,0.0);}
+                        if(dice[3]==3)  {glColor3f(0.0,1.0,1.0);}
+                        if(dice[3]==4)  {glColor3f(1.0,0.0,0.0);}
+                        if(dice[3]==5)  {glColor3f(0.0,0.0,1.0);}
+                        if(dice[3]==6)  {glColor3f(1.0,1.0,0.0);}
     }
+
 
     glBegin(GL_QUADS);
       glVertex3f(60,-60,50);
