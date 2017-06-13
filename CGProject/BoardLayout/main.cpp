@@ -1,3 +1,4 @@
+//Header Files required for the working
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #include <GLUT/glext.h>
@@ -18,16 +19,25 @@ using namespace std;
 
 //Function prototypes
 
+//For loading images
 void setTexture(vector<unsigned char> img, unsigned width, unsigned height);
 void invert(vector<unsigned char> &img,const unsigned width,const unsigned height);
 void loadImage(const char* name,int n);
 
+//for writing strokes i.e renderring text
 void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2);
 
+//user defined functions required for gameplay
+
+//Required for First Window
+void windowOne();
 void drawoptions();
 void selectoptions();
-void windowOne();
+
+//Required for Second Window
 void windowTwo();
+
+//Required for Third Window
 void windowThree();
 void drawMesh();
 void drawplayer();
@@ -35,25 +45,32 @@ void drawdice();
 void spindDisplay();
 void gameplay();
 void diceposition();
-void mouse (int button, int state, int x, int y);
+void check_ladder();
+void check_snake();
+
+//system functions with changed definitions
+void mouse(int button, int state, int x, int y);
 
 //Variables to be used in the program
 
-int numplayers=0;
 int windowWidth;
 int windowHeight;
+bool window1=false,window2=false,window3=false;
+
+int numplayers=0; //number of players
 int flag=0;
-bool window2=false,window3=false,window4=false;
 int dice[4];
 int player_flag[4]={1,0,0,0};
-float right_movement[4]={0.0},up_movement[4]={0},start[4]={-70};
+float right_movement[4]={0},up_movement[4]={0},start[4]={-70};
 int player_sum[4]={0};
-int pc_flag=0;
+int pc_counter=0;
 int dice_position=-1;
 float dice_dimension=50;
 float spin;
 int snake_pos[101];
 int stair_pos[101];
+int set_pointer=0,dp=-1;
+int game_pointer=0;
 
 
 //image related declarations
@@ -484,17 +501,18 @@ void drawMesh()
         }
 }
 
+
 void drawplayer()
 {
     glPointSize(200.0);
         glColor3f(1.0,0.0,1.0);
         glBegin(GL_POLYGON);
         int pi=3.14;
-        float theta=0,radius=25;
+        float th=0,r=25;
         for(int i=0;i<360;i++){
-            glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[0]+start[0],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[0],-100);
+            glVertex3f((r*cos((pi/(float)180)*th))+35+right_movement[0]+start[0],(r*sin((pi/(float)180)*th))+42.5+up_movement[0],-100);
 
-            theta+=1;
+            th=th+1;
         }
         glEnd();
 
@@ -503,9 +521,29 @@ void drawplayer()
         glBegin(GL_POLYGON);
 
         for(int i=0;i<360;i++){
-            glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[1]+start[1],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[1],-100);
+            glVertex3f((r*cos((pi/(float)180)*th))+35+right_movement[1]+start[1],(r*sin((pi/(float)180)*th))+42.5+up_movement[1],-100);
 
-            theta+=1;
+            th=th+1;
+        }
+        glEnd();
+         glPointSize(200.0);
+        glColor3f(0.0,1.0,0.0);
+        glBegin(GL_POLYGON);
+
+        for(int i=0;i<360;i++){
+            glVertex3f((r*cos((pi/(float)180)*th))+35+right_movement[2]+start[2],(r*sin((pi/(float)180)*th))+42.5+up_movement[2],-100);
+
+            th=th+1;
+        }
+        glEnd();
+         glPointSize(200.0);
+        glColor3f(1.0,0.0,0.0);
+        glBegin(GL_POLYGON);
+
+        for(int i=0;i<360;i++){
+            glVertex3f((r*cos((pi/(float)180)*th))+35+right_movement[3]+start[3],(r*sin((pi/(float)180)*th))+42.5+up_movement[3],-100);
+
+            th=th+1;
         }
         glEnd();
 
@@ -529,21 +567,32 @@ void mouse (int button, int state, int x, int y)            //mouse function...
     {
         case GLUT_LEFT_BUTTON   :   if(state == GLUT_DOWN)
                                     {
-                                        dice_position=-1;
+                                        dp=-1;
                                         glutIdleFunc(spindDisplay);
+                                        printf("%d$$",numplayers);
+                                        if(numplayers==0)
+                                        {
+                                            numplayers=2;
+                                        }
+                                        if(set_pointer==0)
+                                        {
+                                            pc_counter=(numplayers-1);
+                                            set_pointer++;
+                                        }
                                     }
                                     break;
         case GLUT_RIGHT_BUTTON  :   if(state == GLUT_DOWN)
                                     {
-                                        dice_position=2;
+                                        dp=2;
                                         glutIdleFunc(diceposition);
-                                        pc_flag++;
+                                        pc_counter++;
                                         gameplay();
                                     }
                                     break;
         default                 :   break;
     }
 }
+
 
 
 void drawdice()
@@ -610,90 +659,150 @@ void gameplay()
 
 
     stair_pos[1]=38;stair_pos[4]=14;stair_pos[9]=31;stair_pos[21]=42;stair_pos[28]=84;stair_pos[36]=44;stair_pos[51]=67;stair_pos[71]=91;stair_pos[80]=100;
-    snake_pos[16]=6;snake_pos[47]=26;snake_pos[49]=30;snake_pos[56]=53;snake_pos[62]=19;snake_pos[63]=60;snake_pos[87]=24;snake_pos[93]=73;snake_pos[98]=75;
-    for(int i=0;i<numplayers;i++)
-    {
-        if(player_flag[i]==1)
-        {
-            dice[i]=generate_num();
-            
-            if((player_sum[i]+dice[i])<=100)
-            {
-                player_sum[i]+=dice[i];
-                // ladder check
-                if(stair_pos[player_sum[i]]!=0)
-                {
-                    // stair found
-                    player_sum[i]=stair_pos[player_sum[i]];
-                }
-                // snake check
-                if(snake_pos[player_sum[i]]!=0)
-                {
-                    // snake found
-                    player_sum[i]=snake_pos[player_sum[i]];
-                }
-                if(((player_sum[i]/10)%2)!=0)
-                {
-                    right_movement[i]=70*(9-(player_sum[i]%10));
-                }
-                else
-                {
-                    right_movement[i]=70*(player_sum[i]%10);
-                }
-                up_movement[i]=85*(player_sum[i]/10);
-                //Chance of next player
-                player_flag[i]=0;
-                player_flag[i+1]=1;
-                if(start[i]==-70)
-                {   
-                    if(dice[i]==6)
-                    {
-                        start[i]=0;
-                        player_flag[i]=0;
-                        player_flag[i+1]=1;
-                    }
-                }
-            }
-            else
-            {
-                player_flag[i]=0;
-                player_flag[i+1]=1;
-            }
-        }
-    }
+    snake_pos[16]=6;snake_pos[47]=26;snake_pos[49]=30;snake_pos[56]=53;snake_pos[62]=19;snake_pos[63]=60;snake_pos[87]=24;snake_pos[93]=73;snake_pos[95]=75;snake_pos[98]=78;
+
+
+
+                 if(player_flag[((pc_counter)%numplayers)]==1 )
+                                      { printf("%d-->",numplayers);
+                                        dice[((pc_counter)%numplayers)]=generate_num();
+
+                                            if(( player_sum[((pc_counter)%numplayers)]+dice[((pc_counter)%numplayers)])>100)
+                                            {
+                                                  player_flag[((pc_counter)%numplayers)]=0;
+                                                player_flag[((pc_counter+1)%numplayers)]=1;
+                                            }
+
+
+                                      if(( player_sum[((pc_counter)%numplayers)]+dice[1])<=99 && (start[((pc_counter)%numplayers)]==0))
+                                      {
+
+
+                                         player_sum[((pc_counter)%numplayers)]+=dice[((pc_counter)%numplayers)];
+
+                                             if(stair_pos[( player_sum[((pc_counter)%numplayers)]+1)]!=0)
+                                                {
+                                                    // stair found
+                                                    player_sum[((pc_counter)%numplayers)]=stair_pos[player_sum[((pc_counter)%numplayers)]+1]-1;
+                                                     if((( player_sum[((pc_counter)%numplayers)]/10)%2)!=0)
+                                                    {
+                                                        right_movement[((pc_counter)%numplayers)]=70*(9-( player_sum[((pc_counter)%numplayers)]%10));
+                                                    }
+                                                else
+                                                    {
+                                                    right_movement[((pc_counter)%numplayers)]=70*( player_sum[((pc_counter)%numplayers)]%10);
+                                                    }
+                                                up_movement[((pc_counter)%numplayers)]=85*( player_sum[((pc_counter)%numplayers)]/10);
+
+                                                 player_flag[((pc_counter)%numplayers)]=0;
+                                                player_flag[((pc_counter+1)%numplayers)]=1;
+
+
+
+                                                }
+
+
+                                        else
+                                        {
+                                            if((( player_sum[((pc_counter)%numplayers)]/10)%2)!=0)
+                                                    {
+                                                        right_movement[((pc_counter)%numplayers)]=70*(9-( player_sum[((pc_counter)%numplayers)]%10));
+                                                    }
+                                             else
+                                             {
+                                                 right_movement[((pc_counter)%numplayers)]=70*( player_sum[((pc_counter)%numplayers)]%10);
+                                             }
+                                            up_movement[((pc_counter)%numplayers)]=85*( player_sum[((pc_counter)%numplayers)]/10);
+                                             player_flag[((pc_counter)%numplayers)]=0;
+                                                player_flag[((pc_counter+1)%numplayers)]=1;
+
+
+                                        }
+                                        if(snake_pos[player_sum[((pc_counter)%numplayers)]+1]!=0)
+                                            {
+                                                // snake found
+                                                player_sum[((pc_counter)%numplayers)]=snake_pos[player_sum[((pc_counter)%numplayers)]+1]-1;
+                                                  if((( player_sum[((pc_counter)%numplayers)]/10)%2)!=0)
+                                                    {
+                                                        right_movement[((pc_counter)%numplayers)]=70*(9-( player_sum[((pc_counter)%numplayers)]%10));
+                                                    }
+                                                else
+                                                    {
+                                                    right_movement[((pc_counter)%numplayers)]=70*( player_sum[((pc_counter)%numplayers)]%10);
+                                                    }
+                                                up_movement[((pc_counter)%numplayers)]=85*( player_sum[((pc_counter)%numplayers)]/10);
+                                            }
+
+                                      }
+
+                                    if(start[((pc_counter)%numplayers)]==-70)
+                                    {   if(dice[((pc_counter)%numplayers)]==6)
+                                        {start[((pc_counter)%numplayers)]=0;
+                                         player_flag[((pc_counter)%numplayers)]=0;
+                                         player_flag[((pc_counter+1)%numplayers)]=1;
+
+                                        }
+                                        else
+                                        {
+                                            player_flag[((pc_counter)%numplayers)]=0;
+                                         player_flag[((pc_counter+1)%numplayers)]=1;
+                                        }
+
+                                    }
+                                     printf("\n%d@@@", pc_counter);
 }
+}
+
+
 
 void diceposition()
 {
     spin=0;
 
-    if((pc_flag%2)==1) {
-                        if(dice[0]==1){glColor3f(1.0,0.0,1.0);}
-                        if(dice[0]==2){glColor3f(0.0,1.0,0.0);}
-                        if(dice[0]==3){glColor3f(0.0,1.0,1.0);}
-                        if(dice[0]==4){glColor3f(1.0,0.0,0.0);}
-                        if(dice[0]==5){glColor3f(0.0,0.0,1.0);}
-                        if(dice[0]==6){glColor3f(1.0,1.0,0.0);}
-    }
-      if( (pc_flag%2)==0) {
-                        if(dice[1]==1){glColor3f(1.0,0.0,1.0);}
-                        if(dice[1]==2){glColor3f(0.0,1.0,0.0);}
-                        if(dice[1]==3){glColor3f(0.0,1.0,1.0);}
-                        if(dice[1]==4){glColor3f(1.0,0.0,0.0);}
-                        if(dice[1]==5){glColor3f(0.0,0.0,1.0);}
-                        if(dice[1]==6){glColor3f(1.0,1.0,0.0);}
-    }
+                                if((pc_counter%numplayers)==0) {
+                                                    if(dice[0]==1){glColor3f(1.0,0.0,1.0);}
+                                                    if(dice[0]==2){glColor3f(0.0,1.0,0.0);}
+                                                    if(dice[0]==3){glColor3f(0.0,1.0,1.0);}
+                                                    if(dice[0]==4){glColor3f(1.0,0.0,0.0);}
+                                                    if(dice[0]==5){glColor3f(0.0,0.0,1.0);}
+                                                    if(dice[0]==6){glColor3f(1.0,1.0,0.0);}
+                                }
+                                if((pc_counter%numplayers)==1) {
+                                                    if(dice[1]==1){glColor3f(1.0,0.0,1.0);}
+                                                    if(dice[1]==2){glColor3f(0.0,1.0,0.0);}
+                                                    if(dice[1]==3){glColor3f(0.0,1.0,1.0);}
+                                                    if(dice[1]==4){glColor3f(1.0,0.0,0.0);}
+                                                    if(dice[1]==5){glColor3f(0.0,0.0,1.0);}
+                                                    if(dice[1]==6){glColor3f(1.0,1.0,0.0);}
+                                }
+                            if((pc_counter%numplayers)==2) {
+                                                    if(dice[2]==1){glColor3f(1.0,0.0,1.0);}
+                                                    if(dice[2]==2){glColor3f(0.0,1.0,0.0);}
+                                                    if(dice[2]==3){glColor3f(0.0,1.0,1.0);}
+                                                    if(dice[2]==4){glColor3f(1.0,0.0,0.0);}
+                                                    if(dice[2]==5){glColor3f(0.0,0.0,1.0);}
+                                                    if(dice[2]==6){glColor3f(1.0,1.0,0.0);}
+                                }
+                            if((pc_counter%numplayers)==3) {
+                                                     if(dice[3]==1){glColor3f(1.0,0.0,1.0);}
+                                                    if(dice[3]==2){glColor3f(0.0,1.0,0.0);}
+                                                    if(dice[3]==3){glColor3f(0.0,1.0,1.0);}
+                                                    if(dice[3]==4){glColor3f(1.0,0.0,0.0);}
+                                                    if(dice[3]==5){glColor3f(0.0,0.0,1.0);}
+                                                    if(dice[3]==6){glColor3f(1.0,1.0,0.0);}
+                                }
+
 
 
     glBegin(GL_QUADS);
 
-    glVertex3f(dice_dimension,-dice_dimension,dice_dimension); //x,y=0,z
+    glVertex3f(60,-60,50); //x,y=0,z
    //glColor3f(1,1,1);
-    glVertex3f(dice_dimension,dice_dimension,dice_dimension); //x,y,z
+    glVertex3f(60,60,50); //x,y,z
     //glColor3f(1,1,0);
-    glVertex3f(-dice_dimension,dice_dimension,dice_dimension); //-x,y,z
+    glVertex3f(-60,60,50); //-x,y,z
     //glColor3f(0,1,0);
-    glVertex3f(-dice_dimension,-dice_dimension,dice_dimension); //-x,y=0,z
+    glVertex3f(-60,-60,50); //-x,y=0,z
 
 
     glEnd();
