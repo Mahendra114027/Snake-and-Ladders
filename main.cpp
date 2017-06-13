@@ -31,7 +31,7 @@ int dice[4];                      //Stores dice values of players
 int numplayers=0;                 //Stores number of players
 int pc_counter=1;                 //Stores chances condition factor
 int set_pointer=0;                //Set program counter
-int select_flag=0;				  //Stores the user specified no. of players 
+int select_flag=0;				        //Stores the user specified no. of players
 int snake_pos[101];               //Stores snake heads in the mesh
 int stair_pos[101];               //Stores ladders bottom in the mesh
 int dice_position=-1;             //Stores the dice movement
@@ -95,17 +95,17 @@ unsigned dice6height;
 //Texture to be used
 GLuint texname;
 
-//Function prototypes
+/*****    Function prototypes involving Images   *****/
 
 //For loading images
 void setTexture(vector<unsigned char> img, unsigned width, unsigned height);
 void invert(vector<unsigned char> &img,const unsigned width,const unsigned height);
 void loadImage(const char* name,int n);
 
-//for writing strokes i.e renderring text
+//For Stroke Drawing
 void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2);
 
-//user defined functions required for gameplay
+/*****    Function prototypes for User defined functions    *****/
 
 //Required for First Window
 void windowOne();
@@ -120,53 +120,63 @@ void windowThree();
 void drawMesh();
 void drawplayer();
 void drawdice();
-void spindDisplay();
+void spinDice();
 void gameplay();
 void diceposition();
 void check_ladder();
 void check_snake();
 
-//system functions with changed definitions
-void init();
+/***** Glut functions with changed definitions    *****/
+static void init(void);
 static void idle(void);
 static void display(void);
 static void key(unsigned char key,int x,int y);
 static void specialkeys(int key,int x,int y);
 void mouse(int button, int state, int x, int y);
 
-
-
-//Main Function
+/*****    Main Function   *****/
 int main(int argc, char *argv[])
 {
-    //load image to memory
-    loadImage("logo.png",1);
-    loadImage("board.png",0);
-    glGenTextures(1, &texname);
-    glutInit(&argc, argv);
-    glutInitWindowSize(WIDTH,HEIGHT);
-    glutInitWindowPosition(10,10);
-    glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE);
-    glutCreateWindow("Snake and Ladders");
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    init();
+    //loading image to memory
+      loadImage("logo.png",1);
+      loadImage("board.png",0);
 
-    windowWidth=glutGet(GLUT_WINDOW_WIDTH);
-    windowHeight=glutGet(GLUT_WINDOW_HEIGHT);
+    //generating textures
+      glGenTextures(1, &texname);
 
-    glutFullScreen();
-    glutDisplayFunc(display);
-    glutKeyboardFunc(key);
-    glutSpecialFunc(specialkeys);
-    glutIdleFunc(idle);
-    glutMouseFunc(mouse);
-    glutMainLoop();
+    //glut initialisation calls
+      glutInit(&argc, argv);
+      glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+
+    //window attributes
+      glutInitWindowSize(WIDTH,HEIGHT);
+      glutInitWindowPosition(10,10);
+      glutCreateWindow("Snake and Ladders");
+      windowWidth=glutGet(GLUT_WINDOW_WIDTH);
+      windowHeight=glutGet(GLUT_WINDOW_HEIGHT);
+
+    //Other Initialisations
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glEnable(GL_BLEND);
+
+    //Calls for functions
+      init();
+      glutFullScreen();
+      glutDisplayFunc(display);
+      glutKeyboardFunc(key);
+      glutSpecialFunc(specialkeys);
+      glutIdleFunc(idle);
+      glutMouseFunc(mouse);
+
+    //Continuous renderring the buffer
+      glutMainLoop();
+
     return EXIT_SUCCESS;
 }
 
-//Glut functions and their user defined definitions
-void init()
+/*****    Glut functions and their user defined definitions   *****/
+
+static void init(void)
 {
     glClearColor(0.0,0.0,0.0,0.0);
     glViewport(0, 0,WIDTH, HEIGHT);
@@ -225,14 +235,46 @@ static void idle(void)
     glutPostRedisplay();
 }
 
-//Functions definitions
+void mouse (int button, int state, int x, int y)            //mouse function...
+{
+    switch(button)
+    {
+        case GLUT_LEFT_BUTTON   :   if(state == GLUT_DOWN)
+                                    {
+                                        dice_position=-1;
+                                        glutIdleFunc(spinDice);
+                                        printf("%d$$",numplayers);
+                                        if(numplayers==0)
+                                        {
+                                            numplayers=2;
+                                        }
+                                        if(set_pointer==0)
+                                        {
+                                            pc_counter=(numplayers-1);
+                                            set_pointer++;
+                                        }
+                                    }
+                                    break;
+        case GLUT_RIGHT_BUTTON  :   if(state == GLUT_DOWN)
+                                    {
+                                        dice_position=2;
+                                        glutIdleFunc(diceposition);
+                                        pc_counter++;
+                                        gameplay();
+                                    }
+                                    break;
+        default                 :   break;
+    }
+}
 
-//Functions used in image loading
+/*****    Function definitions involving Images    *****/
+
 /** Sets current texture to given image
     @param img is image vector that has already been loaded
     @param width is width of the image
     @param height is height of image
 */
+
 void setTexture(vector<unsigned char> img, unsigned width, unsigned height)
 {
 
@@ -248,12 +290,14 @@ void setTexture(vector<unsigned char> img, unsigned width, unsigned height)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
                 0, GL_RGBA, GL_UNSIGNED_BYTE, &img[0]);
 }
+
 /** OpenGL seems to draw images vertically flipped
         this function inverts our data so that it displays correctly
         @param img is our image data vector
         @param width is our image width
         @param height is our image height
 */
+
 void invert(vector<unsigned char> &img,const unsigned width,const unsigned height)
 {
     unsigned char *imageptr = &img[0];
@@ -275,9 +319,11 @@ void invert(vector<unsigned char> &img,const unsigned width,const unsigned heigh
         }
     }
 }
+
 /**
 Load image into memory
 */
+
 void loadImage(const char* name,int n)
 {
     //use lodepng decode to decode image
@@ -304,7 +350,7 @@ void loadImage(const char* name,int n)
 
 }
 
-//String Writing functions
+/*****    Stroke Drawing    *****/
 
 void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 {
@@ -320,8 +366,11 @@ void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 	 glPopMatrix();
 }
 
-// Game play user defined functions
+/*****    Game play user defined functions    *****/
 
+/*****    Window One related functions  *****/
+
+//Drawing options for selecting no. of players
 void drawoptions()
 {
     float cn=windowWidth/2;
@@ -346,7 +395,7 @@ void drawoptions()
     glPopMatrix();
 }
 
-//Selecting the player box
+//Selecting no. of players
 void selectoptions()
 {
     float cn=windowWidth/2;
@@ -416,6 +465,7 @@ void selectoptions()
 
 }
 
+//Display function for Window One
 void windowOne()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -441,6 +491,9 @@ void windowOne()
     glutSwapBuffers();
 }
 
+/*****    Window Two related functions    *****/
+
+//Display function for Window Two
 void windowTwo()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -491,6 +544,306 @@ void windowTwo()
     glutSwapBuffers();
 }
 
+/*****    Window Three related functions  *****/
+
+//Function to draw Mesh over the given board
+void drawMesh()
+{
+    glLoadIdentity();
+    glPushMatrix();
+    glTranslatef(31,81,-50.0);  //not to delete
+    glPointSize(10.0);
+    glScalef(0.9,1,1);
+    for(int i=0;i<pixelwidth;i+=70)
+        for(int j=0;j<pixelheight;j+=85)
+        {
+            glPointSize(4.0);
+            glColor3f(1.0,0.0,0.0);
+            glBegin(GL_LINE_LOOP);
+                glVertex3f(i,j,50);
+                glVertex3f(i,j+85,50);
+                glVertex3f(i+70,j+85,50);
+                glVertex3f(i+70,j,50);
+            glEnd();
+        }
+}
+
+//Function to generate dice number
+int generate_num()
+{
+    int chancenum,dicenum;
+    chancenum=rand()%6;
+    if(chancenum==0)
+        dicenum=generate_num();
+    else
+        dicenum=chancenum;
+    printf("dicenum:%d\n",dicenum);
+    return dicenum;
+}
+
+//Function to draw Players
+void drawplayer()
+{
+    glPointSize(200.0);
+        glColor3f(1.0,0.0,1.0);
+        glBegin(GL_POLYGON);
+        int pi=3.14;
+        float theta=0,radius=25;
+        for(int i=0;i<360;i++){
+            glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[0]+start[0],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[0],-100);
+
+            theta=theta+1;
+        }
+        glEnd();
+
+                glPointSize(200.0);
+        glColor3f(0.0,0.0,1.0);
+        glBegin(GL_POLYGON);
+
+        for(int i=0;i<360;i++){
+            glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[1]+start[1],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[1],-100);
+
+            theta=theta+1;
+        }
+        glEnd();
+         glPointSize(200.0);
+        glColor3f(0.0,1.0,0.0);
+        glBegin(GL_POLYGON);
+
+        for(int i=0;i<360;i++){
+            glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[2]+start[2],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[2],-100);
+
+            theta=theta+1;
+        }
+        glEnd();
+         glPointSize(200.0);
+        glColor3f(1.0,0.0,0.0);
+        glBegin(GL_POLYGON);
+
+        for(int i=0;i<360;i++){
+            glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[3]+start[3],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[3],-100);
+
+            theta=theta+1;
+        }
+        glEnd();
+}
+
+//Function to Draw Dice
+void drawdice()
+{
+    glColor3f(1,0,1);
+
+    glBegin(GL_QUADS);
+        //Top of the Dice
+        glColor3f(1,0,1);
+          glVertex3f(-dice_dimension,dice_dimension,+dice_dimension);
+          glVertex3f(dice_dimension,dice_dimension,+dice_dimension);
+          glVertex3f(dice_dimension,dice_dimension,-dice_dimension);
+          glVertex3f(-dice_dimension,dice_dimension,-dice_dimension);
+
+        //Bottom of the cube
+        glColor3f(1,0,0);
+          glVertex3f(-dice_dimension,-dice_dimension,dice_dimension);
+          glVertex3f(dice_dimension,-dice_dimension,dice_dimension);
+          glVertex3f(dice_dimension,-dice_dimension,-dice_dimension);
+          glVertex3f(-dice_dimension,-dice_dimension,-dice_dimension);
+
+        //Left of the cube
+        glColor3f(0,1,0);
+          glVertex3f(-dice_dimension,-dice_dimension,dice_dimension);
+          glVertex3f(-dice_dimension,-dice_dimension,-dice_dimension);
+          glVertex3f(-dice_dimension,dice_dimension,-dice_dimension);
+          glVertex3f(-dice_dimension,dice_dimension,dice_dimension);
+
+        //Right of the cube
+        glColor3f(1,1,0);
+          glVertex3f(dice_dimension,-dice_dimension,dice_dimension);
+          glVertex3f(dice_dimension,-dice_dimension,-dice_dimension);
+          glVertex3f(dice_dimension,dice_dimension,-dice_dimension);
+          glVertex3f(dice_dimension,dice_dimension,dice_dimension);
+
+        //Front of the cube
+        glColor3f(0,1,1);
+          glVertex3f(dice_dimension,-dice_dimension,dice_dimension);
+          glVertex3f(dice_dimension,dice_dimension,dice_dimension);
+          glVertex3f(-dice_dimension,dice_dimension,dice_dimension);
+          glVertex3f(-dice_dimension,-dice_dimension,dice_dimension);
+
+        //Back of the cube
+        glColor3f(0,0,1);
+          glVertex3f(dice_dimension,-dice_dimension,-dice_dimension);
+          glVertex3f(dice_dimension,dice_dimension,-dice_dimension);
+          glVertex3f(-dice_dimension,dice_dimension,-dice_dimension);
+          glVertex3f(-dice_dimension,-dice_dimension,-dice_dimension);
+
+    glEnd();
+}
+
+//Function to Spin Dice
+void spinDice()
+{
+    spin = spin+50.0;
+    if(spin > 360)
+        spin-=359;
+    glutPostRedisplay();
+}
+
+void gameplay()
+{
+    //Snake and Ladders Positions both points
+    //snake positions={{16,6},{47,26},{49,30},{56,53},{62,19},{63,60},{87,24},{93,73},{95,75},{98,75}}
+    //ladders positions={{1,38},{4,14},{9,31},{21,42},{28,84},{36,44},{51,67},{71,91},{80,100}}
+
+    stair_pos[1]=38;stair_pos[4]=14;stair_pos[9]=31;stair_pos[21]=42;
+    stair_pos[28]=84;stair_pos[36]=44;stair_pos[51]=67;stair_pos[71]=91;stair_pos[80]=100;
+
+    snake_pos[16]=6;snake_pos[47]=26;snake_pos[49]=30;snake_pos[56]=53;snake_pos[62]=19;
+    snake_pos[63]=60;snake_pos[87]=24;snake_pos[93]=73;snake_pos[95]=75;snake_pos[98]=78;
+
+    if(player_flag[((pc_counter)%numplayers)]==1 )
+    {
+        printf("%d-->",numplayers);
+        dice[((pc_counter)%numplayers)]=generate_num();
+
+        if(( player_sum[((pc_counter)%numplayers)]+dice[((pc_counter)%numplayers)])>100)
+        {
+            player_flag[((pc_counter)%numplayers)]=0;
+            player_flag[((pc_counter+1)%numplayers)]=1;
+        }
+
+        if(( player_sum[((pc_counter)%numplayers)]+dice[1])<=99 && (start[((pc_counter)%numplayers)]==0))
+        {
+            player_sum[((pc_counter)%numplayers)]+=dice[((pc_counter)%numplayers)];
+
+            if(stair_pos[( player_sum[((pc_counter)%numplayers)]+1)]!=0)
+            {
+                //If Ladder is Found
+                player_sum[((pc_counter)%numplayers)]=stair_pos[player_sum[((pc_counter)%numplayers)]+1]-1;
+
+                if((( player_sum[((pc_counter)%numplayers)]/10)%2)!=0)
+                {
+                    right_movement[((pc_counter)%numplayers)]=70*(9-(player_sum[((pc_counter)%numplayers)]%10));
+                }
+                else
+                {
+                    right_movement[((pc_counter)%numplayers)]=70*( player_sum[((pc_counter)%numplayers)]%10);
+                }
+
+                up_movement[((pc_counter)%numplayers)]=85*( player_sum[((pc_counter)%numplayers)]/10);
+                player_flag[((pc_counter)%numplayers)]=0;
+                player_flag[((pc_counter+1)%numplayers)]=1;
+            }
+            else
+            {
+                if((( player_sum[((pc_counter)%numplayers)]/10)%2)!=0)
+                {
+                    right_movement[((pc_counter)%numplayers)]=70*(9-(player_sum[((pc_counter)%numplayers)]%10));
+                }
+                else
+                {
+                    right_movement[((pc_counter)%numplayers)]=70*( player_sum[((pc_counter)%numplayers)]%10);
+                }
+
+                up_movement[((pc_counter)%numplayers)]=85*( player_sum[((pc_counter)%numplayers)]/10);
+                player_flag[((pc_counter)%numplayers)]=0;
+                player_flag[((pc_counter+1)%numplayers)]=1;
+            }
+
+            if(snake_pos[player_sum[((pc_counter)%numplayers)]+1]!=0)
+            {
+                //If Snake is found
+                player_sum[((pc_counter)%numplayers)]=snake_pos[player_sum[((pc_counter)%numplayers)]+1]-1;
+
+                if((( player_sum[((pc_counter)%numplayers)]/10)%2)!=0)
+                {
+                    right_movement[((pc_counter)%numplayers)]=70*(9-( player_sum[((pc_counter)%numplayers)]%10));
+                }
+                else
+                {
+                    right_movement[((pc_counter)%numplayers)]=70*( player_sum[((pc_counter)%numplayers)]%10);
+                }
+
+                up_movement[((pc_counter)%numplayers)]=85*( player_sum[((pc_counter)%numplayers)]/10);
+            }
+        }
+
+        if(start[((pc_counter)%numplayers)]==-70)
+        {
+            if(dice[((pc_counter)%numplayers)]==6)
+            {
+                start[((pc_counter)%numplayers)]=0;
+                player_flag[((pc_counter)%numplayers)]=0;
+                player_flag[((pc_counter+1)%numplayers)]=1;
+            }
+            else
+            {
+                player_flag[((pc_counter)%numplayers)]=0;
+                player_flag[((pc_counter+1)%numplayers)]=1;
+            }
+        }
+        printf("Program Counter : %d\n", pc_counter);
+    }
+}
+
+//Function to show dice face
+void diceposition()
+{
+    spin=0;
+
+    //Player 1
+    if((pc_counter%numplayers)==0)
+    {
+                        if(dice[0]==1){glColor3f(1.0,0.0,1.0);}
+                        if(dice[0]==2){glColor3f(0.0,1.0,0.0);}
+                        if(dice[0]==3){glColor3f(0.0,1.0,1.0);}
+                        if(dice[0]==4){glColor3f(1.0,0.0,0.0);}
+                        if(dice[0]==5){glColor3f(0.0,0.0,1.0);}
+                        if(dice[0]==6){glColor3f(1.0,1.0,0.0);}
+    }
+
+    //Player 2
+    if((pc_counter%numplayers)==1)
+    {
+                        if(dice[1]==1){glColor3f(1.0,0.0,1.0);}
+                        if(dice[1]==2){glColor3f(0.0,1.0,0.0);}
+                        if(dice[1]==3){glColor3f(0.0,1.0,1.0);}
+                        if(dice[1]==4){glColor3f(1.0,0.0,0.0);}
+                        if(dice[1]==5){glColor3f(0.0,0.0,1.0);}
+                        if(dice[1]==6){glColor3f(1.0,1.0,0.0);}
+    }
+
+    //Player 3
+    if((pc_counter%numplayers)==2)
+    {
+                        if(dice[2]==1){glColor3f(1.0,0.0,1.0);}
+                        if(dice[2]==2){glColor3f(0.0,1.0,0.0);}
+                        if(dice[2]==3){glColor3f(0.0,1.0,1.0);}
+                        if(dice[2]==4){glColor3f(1.0,0.0,0.0);}
+                        if(dice[2]==5){glColor3f(0.0,0.0,1.0);}
+                        if(dice[2]==6){glColor3f(1.0,1.0,0.0);}
+    }
+
+    //Player 4
+    if((pc_counter%numplayers)==3)
+    {
+                         if(dice[3]==1){glColor3f(1.0,0.0,1.0);}
+                        if(dice[3]==2){glColor3f(0.0,1.0,0.0);}
+                        if(dice[3]==3){glColor3f(0.0,1.0,1.0);}
+                        if(dice[3]==4){glColor3f(1.0,0.0,0.0);}
+                        if(dice[3]==5){glColor3f(0.0,0.0,1.0);}
+                        if(dice[3]==6){glColor3f(1.0,1.0,0.0);}
+    }
+
+    glBegin(GL_QUADS);
+      glVertex3f(60,-60,50);
+      glVertex3f(60,60,50);
+      glVertex3f(-60,60,50);
+      glVertex3f(-60,-60,50);
+    glEnd();
+
+}
+
+//Display function for Window Three
 void windowThree()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -524,333 +877,4 @@ void windowThree()
     glPopMatrix();
 
     glutSwapBuffers();
-}
-
-void drawMesh()
-{
-    glLoadIdentity();
-    glPushMatrix();
-    glTranslatef(31,81,-50.0);  //not to delete
-    glPointSize(10.0);
-    glScalef(0.9,1,1);
-    for(int i=0;i<pixelwidth;i+=70)
-        for(int j=0;j<pixelheight;j+=85)
-        {
-            glPointSize(4.0);
-            glColor3f(1.0,0.0,0.0);
-            glBegin(GL_LINE_LOOP);
-                glVertex3f(i,j,50);
-                glVertex3f(i,j+85,50);
-                glVertex3f(i+70,j+85,50);
-                glVertex3f(i+70,j,50);
-            glEnd();
-        }
-}
-
-
-void drawplayer()
-{
-    glPointSize(200.0);
-        glColor3f(1.0,0.0,1.0);
-        glBegin(GL_POLYGON);
-        int pi=3.14;
-        float th=0,r=25;
-        for(int i=0;i<360;i++){
-            glVertex3f((r*cos((pi/(float)180)*th))+35+right_movement[0]+start[0],(r*sin((pi/(float)180)*th))+42.5+up_movement[0],-100);
-
-            th=th+1;
-        }
-        glEnd();
-
-                glPointSize(200.0);
-        glColor3f(0.0,0.0,1.0);
-        glBegin(GL_POLYGON);
-
-        for(int i=0;i<360;i++){
-            glVertex3f((r*cos((pi/(float)180)*th))+35+right_movement[1]+start[1],(r*sin((pi/(float)180)*th))+42.5+up_movement[1],-100);
-
-            th=th+1;
-        }
-        glEnd();
-         glPointSize(200.0);
-        glColor3f(0.0,1.0,0.0);
-        glBegin(GL_POLYGON);
-
-        for(int i=0;i<360;i++){
-            glVertex3f((r*cos((pi/(float)180)*th))+35+right_movement[2]+start[2],(r*sin((pi/(float)180)*th))+42.5+up_movement[2],-100);
-
-            th=th+1;
-        }
-        glEnd();
-         glPointSize(200.0);
-        glColor3f(1.0,0.0,0.0);
-        glBegin(GL_POLYGON);
-
-        for(int i=0;i<360;i++){
-            glVertex3f((r*cos((pi/(float)180)*th))+35+right_movement[3]+start[3],(r*sin((pi/(float)180)*th))+42.5+up_movement[3],-100);
-
-            th=th+1;
-        }
-        glEnd();
-
-}
-
-int generate_num()
-{
-    int chancenum,dicenum;
-    chancenum=rand()%6;
-    if(chancenum==0)
-        dicenum=generate_num();
-    else
-        dicenum=chancenum;
-    printf("dicenum:%d\n",dicenum);
-    return dicenum;
-}
-
-void mouse (int button, int state, int x, int y)            //mouse function...
-{
-    switch(button)
-    {
-        case GLUT_LEFT_BUTTON   :   if(state == GLUT_DOWN)
-                                    {
-                                        dice_position=-1;
-                                        glutIdleFunc(spindDisplay);
-                                        printf("%d$$",numplayers);
-                                        if(numplayers==0)
-                                        {
-                                            numplayers=2;
-                                        }
-                                        if(set_pointer==0)
-                                        {
-                                            pc_counter=(numplayers-1);
-                                            set_pointer++;
-                                        }
-                                    }
-                                    break;
-        case GLUT_RIGHT_BUTTON  :   if(state == GLUT_DOWN)
-                                    {
-                                        dice_position=2;
-                                        glutIdleFunc(diceposition);
-                                        pc_counter++;
-                                        gameplay();
-                                    }
-                                    break;
-        default                 :   break;
-    }
-}
-
-
-
-void drawdice()
-{
-    glColor3f(1,0,1);
-
-    glBegin(GL_QUADS);
-        //Top of the Dice
-        glColor3f(1,0,1);
-        glVertex3f(-dice_dimension,dice_dimension,+dice_dimension);
-        glVertex3f(dice_dimension,dice_dimension,+dice_dimension);
-        glVertex3f(dice_dimension,dice_dimension,-dice_dimension);
-        glVertex3f(-dice_dimension,dice_dimension,-dice_dimension);
-
-        //Bottom of the cube
-        glColor3f(1,0,0);
-        glVertex3f(-dice_dimension,-dice_dimension,dice_dimension);
-        glVertex3f(dice_dimension,-dice_dimension,dice_dimension);
-        glVertex3f(dice_dimension,-dice_dimension,-dice_dimension);
-        glVertex3f(-dice_dimension,-dice_dimension,-dice_dimension);
-
-        //Left of the cube
-        glColor3f(0,1,0);
-        glVertex3f(-dice_dimension,-dice_dimension,dice_dimension);
-        glVertex3f(-dice_dimension,-dice_dimension,-dice_dimension);
-        glVertex3f(-dice_dimension,dice_dimension,-dice_dimension);
-        glVertex3f(-dice_dimension,dice_dimension,dice_dimension);
-
-        //Right of the cube
-        glColor3f(1,1,0);
-        glVertex3f(dice_dimension,-dice_dimension,dice_dimension);
-        glVertex3f(dice_dimension,-dice_dimension,-dice_dimension);
-        glVertex3f(dice_dimension,dice_dimension,-dice_dimension);
-        glVertex3f(dice_dimension,dice_dimension,dice_dimension);
-
-        //Front of the cube
-        glColor3f(0,1,1);
-        glVertex3f(dice_dimension,-dice_dimension,dice_dimension);
-        glVertex3f(dice_dimension,dice_dimension,dice_dimension);
-        glVertex3f(-dice_dimension,dice_dimension,dice_dimension);
-        glVertex3f(-dice_dimension,-dice_dimension,dice_dimension);
-
-        //Back of the cube
-        glColor3f(0,0,1);
-        glVertex3f(dice_dimension,-dice_dimension,-dice_dimension);
-        glVertex3f(dice_dimension,dice_dimension,-dice_dimension);
-        glVertex3f(-dice_dimension,dice_dimension,-dice_dimension);
-        glVertex3f(-dice_dimension,-dice_dimension,-dice_dimension);
-
-    glEnd();
-}
-void spindDisplay()
-{
-    spin = spin+50.0;
-    if(spin > 360)
-        spin-=359;
-    glutPostRedisplay();
-}
-
-void gameplay()
-{
-    //snake positions={{16,6},{47,26},{49,30},{56,53},{62,19},{63,60},{87,24},{93,73},{95,75},{98,75}}
-    //ladders positions={{1,38},{4,14},{9,31},{21,42},{28,84},{36,44},{51,67},{71,91},{80,100}}
-
-
-    stair_pos[1]=38;stair_pos[4]=14;stair_pos[9]=31;stair_pos[21]=42;stair_pos[28]=84;stair_pos[36]=44;stair_pos[51]=67;stair_pos[71]=91;stair_pos[80]=100;
-    snake_pos[16]=6;snake_pos[47]=26;snake_pos[49]=30;snake_pos[56]=53;snake_pos[62]=19;snake_pos[63]=60;snake_pos[87]=24;snake_pos[93]=73;snake_pos[95]=75;snake_pos[98]=78;
-
-
-
-                 if(player_flag[((pc_counter)%numplayers)]==1 )
-                                      { printf("%d-->",numplayers);
-                                        dice[((pc_counter)%numplayers)]=generate_num();
-
-                                            if(( player_sum[((pc_counter)%numplayers)]+dice[((pc_counter)%numplayers)])>100)
-                                            {
-                                                  player_flag[((pc_counter)%numplayers)]=0;
-                                                player_flag[((pc_counter+1)%numplayers)]=1;
-                                            }
-
-
-                                      if(( player_sum[((pc_counter)%numplayers)]+dice[1])<=99 && (start[((pc_counter)%numplayers)]==0))
-                                      {
-
-
-                                         player_sum[((pc_counter)%numplayers)]+=dice[((pc_counter)%numplayers)];
-
-                                             if(stair_pos[( player_sum[((pc_counter)%numplayers)]+1)]!=0)
-                                                {
-                                                    // stair found
-                                                    player_sum[((pc_counter)%numplayers)]=stair_pos[player_sum[((pc_counter)%numplayers)]+1]-1;
-                                                     if((( player_sum[((pc_counter)%numplayers)]/10)%2)!=0)
-                                                    {
-                                                        right_movement[((pc_counter)%numplayers)]=70*(9-( player_sum[((pc_counter)%numplayers)]%10));
-                                                    }
-                                                else
-                                                    {
-                                                    right_movement[((pc_counter)%numplayers)]=70*( player_sum[((pc_counter)%numplayers)]%10);
-                                                    }
-                                                up_movement[((pc_counter)%numplayers)]=85*( player_sum[((pc_counter)%numplayers)]/10);
-
-                                                 player_flag[((pc_counter)%numplayers)]=0;
-                                                player_flag[((pc_counter+1)%numplayers)]=1;
-
-
-
-                                                }
-
-
-                                        else
-                                        {
-                                            if((( player_sum[((pc_counter)%numplayers)]/10)%2)!=0)
-                                                    {
-                                                        right_movement[((pc_counter)%numplayers)]=70*(9-( player_sum[((pc_counter)%numplayers)]%10));
-                                                    }
-                                             else
-                                             {
-                                                 right_movement[((pc_counter)%numplayers)]=70*( player_sum[((pc_counter)%numplayers)]%10);
-                                             }
-                                            up_movement[((pc_counter)%numplayers)]=85*( player_sum[((pc_counter)%numplayers)]/10);
-                                             player_flag[((pc_counter)%numplayers)]=0;
-                                                player_flag[((pc_counter+1)%numplayers)]=1;
-
-
-                                        }
-                                        if(snake_pos[player_sum[((pc_counter)%numplayers)]+1]!=0)
-                                            {
-                                                // snake found
-                                                player_sum[((pc_counter)%numplayers)]=snake_pos[player_sum[((pc_counter)%numplayers)]+1]-1;
-                                                  if((( player_sum[((pc_counter)%numplayers)]/10)%2)!=0)
-                                                    {
-                                                        right_movement[((pc_counter)%numplayers)]=70*(9-( player_sum[((pc_counter)%numplayers)]%10));
-                                                    }
-                                                else
-                                                    {
-                                                    right_movement[((pc_counter)%numplayers)]=70*( player_sum[((pc_counter)%numplayers)]%10);
-                                                    }
-                                                up_movement[((pc_counter)%numplayers)]=85*( player_sum[((pc_counter)%numplayers)]/10);
-                                            }
-
-                                      }
-
-                                    if(start[((pc_counter)%numplayers)]==-70)
-                                    {   if(dice[((pc_counter)%numplayers)]==6)
-                                        {start[((pc_counter)%numplayers)]=0;
-                                         player_flag[((pc_counter)%numplayers)]=0;
-                                         player_flag[((pc_counter+1)%numplayers)]=1;
-
-                                        }
-                                        else
-                                        {
-                                            player_flag[((pc_counter)%numplayers)]=0;
-                                         player_flag[((pc_counter+1)%numplayers)]=1;
-                                        }
-
-                                    }
-                                     printf("\n%d@@@", pc_counter);
-}
-}
-
-
-
-void diceposition()
-{
-    spin=0;
-
-                                if((pc_counter%numplayers)==0) {
-                                                    if(dice[0]==1){glColor3f(1.0,0.0,1.0);}
-                                                    if(dice[0]==2){glColor3f(0.0,1.0,0.0);}
-                                                    if(dice[0]==3){glColor3f(0.0,1.0,1.0);}
-                                                    if(dice[0]==4){glColor3f(1.0,0.0,0.0);}
-                                                    if(dice[0]==5){glColor3f(0.0,0.0,1.0);}
-                                                    if(dice[0]==6){glColor3f(1.0,1.0,0.0);}
-                                }
-                                if((pc_counter%numplayers)==1) {
-                                                    if(dice[1]==1){glColor3f(1.0,0.0,1.0);}
-                                                    if(dice[1]==2){glColor3f(0.0,1.0,0.0);}
-                                                    if(dice[1]==3){glColor3f(0.0,1.0,1.0);}
-                                                    if(dice[1]==4){glColor3f(1.0,0.0,0.0);}
-                                                    if(dice[1]==5){glColor3f(0.0,0.0,1.0);}
-                                                    if(dice[1]==6){glColor3f(1.0,1.0,0.0);}
-                                }
-                            if((pc_counter%numplayers)==2) {
-                                                    if(dice[2]==1){glColor3f(1.0,0.0,1.0);}
-                                                    if(dice[2]==2){glColor3f(0.0,1.0,0.0);}
-                                                    if(dice[2]==3){glColor3f(0.0,1.0,1.0);}
-                                                    if(dice[2]==4){glColor3f(1.0,0.0,0.0);}
-                                                    if(dice[2]==5){glColor3f(0.0,0.0,1.0);}
-                                                    if(dice[2]==6){glColor3f(1.0,1.0,0.0);}
-                                }
-                            if((pc_counter%numplayers)==3) {
-                                                     if(dice[3]==1){glColor3f(1.0,0.0,1.0);}
-                                                    if(dice[3]==2){glColor3f(0.0,1.0,0.0);}
-                                                    if(dice[3]==3){glColor3f(0.0,1.0,1.0);}
-                                                    if(dice[3]==4){glColor3f(1.0,0.0,0.0);}
-                                                    if(dice[3]==5){glColor3f(0.0,0.0,1.0);}
-                                                    if(dice[3]==6){glColor3f(1.0,1.0,0.0);}
-                                }
-
-
-
-    glBegin(GL_QUADS);
-
-    glVertex3f(60,-60,50); //x,y=0,z
-   //glColor3f(1,1,1);
-    glVertex3f(60,60,50); //x,y,z
-    //glColor3f(1,1,0);
-    glVertex3f(-60,60,50); //-x,y,z
-    //glColor3f(0,1,0);
-    glVertex3f(-60,-60,50); //-x,y=0,z
-
-
-    glEnd();
-
 }
