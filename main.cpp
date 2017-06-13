@@ -1,4 +1,5 @@
-//Header Files required for the working
+/*****    Header Files required in the program   *****/
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #include <GLUT/glext.h>
@@ -11,11 +12,88 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
-#include "lodepng.h"
-#include "lodepng.cpp"
+#include "lodepng/lodepng.h"
+#include "lodepng/lodepng.cpp"
 #include<math.h>
 
 using namespace std;
+
+/*****    Variables to be used in the program   *****/
+
+//Variables used for Window transitions and renderring
+int windowWidth;
+int windowHeight;
+bool window1=false,window2=false,window3=false;
+
+//Variables used for gameplay
+float spin;                       //Stores spinning factor of the cube
+int dice[4];                      //Stores dice values of players
+int numplayers=0;                 //Stores number of players
+int pc_counter=1;                 //Stores chances condition factor
+int set_pointer=0;                //Set program counter
+int select_flag=0;				  //Stores the user specified no. of players 
+int snake_pos[101];               //Stores snake heads in the mesh
+int stair_pos[101];               //Stores ladders bottom in the mesh
+int dice_position=-1;             //Stores the dice movement
+float start[4]={-70};             //Start positions of the players
+int player_sum[4]={0};            //Stores the current
+float dice_dimension=50;          //Stores the dice
+int player_flag[4]={1,0,0,0};     //Stores the player which has current chance
+float right_movement[4]={0};      //Monitors player position horizontally
+float up_movement[4]={0};         //Monitors player position vertically
+
+/*****    Image renderring declarations   *****/
+
+//Viewport and Window required variables
+int pixelwidth=700;
+int pixelheight=850;
+int WIDTH=500;
+int HEIGHT=500;
+
+// storage for image(pixel array)
+
+//Logo image and attributes
+vector <unsigned char> image_logo;
+unsigned logowidth;
+unsigned logoheight;
+
+//Board image and attributes
+vector <unsigned char> image_board;
+unsigned boardwidth;
+unsigned boardheight;
+
+//Dice 1 image and attributes
+vector <unsigned char> image_dice1;
+unsigned dice1width;
+unsigned dice1height;
+
+//Dice 2 image and attributes
+vector <unsigned char> image_dice2;
+unsigned dice2width;
+unsigned dice2height;
+
+//Dice 3 image and attributes
+vector <unsigned char> image_dice3;
+unsigned dice3width;
+unsigned dice3height;
+
+//Dice 4 image and attributes
+vector <unsigned char> image_dice4;
+unsigned dice4width;
+unsigned dice4height;
+
+//Dice 5 image and attributes
+vector <unsigned char> image_dice5;
+unsigned dice5width;
+unsigned dice5height;
+
+//Dice 6 image and attributes
+vector <unsigned char> image_dice6;
+unsigned dice6width;
+unsigned dice6height;
+
+//Texture to be used
+GLuint texname;
 
 //Function prototypes
 
@@ -49,46 +127,43 @@ void check_ladder();
 void check_snake();
 
 //system functions with changed definitions
+void init();
+static void idle(void);
+static void display(void);
+static void key(unsigned char key,int x,int y);
+static void specialkeys(int key,int x,int y);
 void mouse(int button, int state, int x, int y);
 
-//Variables to be used in the program
-
-int windowWidth;
-int windowHeight;
-bool window1=false,window2=false,window3=false;
-
-int numplayers=0; //number of players
-int flag=0;
-int dice[4];
-int player_flag[4]={1,0,0,0};
-float right_movement[4]={0},up_movement[4]={0},start[4]={-70};
-int player_sum[4]={0};
-int pc_counter=0;
-int dice_position=-1;
-float dice_dimension=50;
-float spin;
-int snake_pos[101];
-int stair_pos[101];
-int set_pointer=0,dp=-1;
-int game_pointer=0;
 
 
-//image related declarations
-int pixelwidth=700;
-int pixelheight=850;
-int WIDTH=500;
-int HEIGHT=500;
-// storage for image(pixel array)
-vector <unsigned char> image_logo;
-// image width and height
-unsigned logowidth;
-unsigned logoheight;
+//Main Function
+int main(int argc, char *argv[])
+{
+    //load image to memory
+    loadImage("logo.png",1);
+    loadImage("board.png",0);
+    glGenTextures(1, &texname);
+    glutInit(&argc, argv);
+    glutInitWindowSize(WIDTH,HEIGHT);
+    glutInitWindowPosition(10,10);
+    glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE);
+    glutCreateWindow("Snake and Ladders");
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    init();
 
-vector <unsigned char> image_board;
-unsigned boardwidth;
-unsigned boardheight;
+    windowWidth=glutGet(GLUT_WINDOW_WIDTH);
+    windowHeight=glutGet(GLUT_WINDOW_HEIGHT);
 
-GLuint texname;
+    glutFullScreen();
+    glutDisplayFunc(display);
+    glutKeyboardFunc(key);
+    glutSpecialFunc(specialkeys);
+    glutIdleFunc(idle);
+    glutMouseFunc(mouse);
+    glutMainLoop();
+    return EXIT_SUCCESS;
+}
 
 //Glut functions and their user defined definitions
 void init()
@@ -101,6 +176,7 @@ void init()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity() ;
 }
+
 static void display(void)
 {
     if(!window2)
@@ -131,53 +207,23 @@ static void specialkeys(int key,int x,int y)
 {
     if(key==GLUT_KEY_RIGHT)
     {
-        flag=(flag+1)%3;
+        select_flag=(select_flag+1)%3;
     }
     else if(key==GLUT_KEY_LEFT)
     {
-        flag--;
-        if(flag<0)
-            flag=2;
+        select_flag--;
+        if(select_flag<0)
+            select_flag=2;
     }
-    numplayers=flag+2;
+    numplayers=select_flag+2;
          printf("nop:%d\n",numplayers);
-    printf("flag:%d\n",flag);
+    printf("select_flag:%d\n",select_flag);
 }
 
 static void idle(void)
 {
     glutPostRedisplay();
 }
-
-int main(int argc, char *argv[])
-{
-    //load image to memory
-    loadImage("logo.png",1);
-    loadImage("board.png",0);
-    glGenTextures(1, &texname);
-    glutInit(&argc, argv);
-    glutInitWindowSize(WIDTH,HEIGHT);
-    glutInitWindowPosition(10,10);
-    glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE);
-    glutCreateWindow("Snake and Ladders");
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    init();
-
-    windowWidth=glutGet(GLUT_WINDOW_WIDTH);
-    windowHeight=glutGet(GLUT_WINDOW_HEIGHT);
-
-    glutFullScreen();
-    glutDisplayFunc(display);
-    glutKeyboardFunc(key);
-    glutSpecialFunc(specialkeys);
-    glutIdleFunc(idle);
-    glutMouseFunc(mouse);
-    glutMainLoop();
-    return EXIT_SUCCESS;
-}
-
-
 
 //Functions definitions
 
@@ -325,7 +371,7 @@ void selectoptions()
         drawStrokeText("4 Players",cn+215.0,100.0,0.0,fontsize,fontsize);
     glPopMatrix();
 
-    if(flag==0)
+    if(select_flag==0)
     {
         glPushMatrix();
         glTranslatef(transx,100,0);
@@ -339,7 +385,7 @@ void selectoptions()
         glEnd();
         glPopMatrix();
     }
-    else if(flag==1)
+    else if(select_flag==1)
     {
         glPushMatrix();
         glTranslatef(transx,100,0);
@@ -353,7 +399,7 @@ void selectoptions()
         glEnd();
         glPopMatrix();
     }
-    else if(flag==2)
+    else if(select_flag==2)
     {
         glPushMatrix();
         glTranslatef(transx,100,0);
@@ -567,7 +613,7 @@ void mouse (int button, int state, int x, int y)            //mouse function...
     {
         case GLUT_LEFT_BUTTON   :   if(state == GLUT_DOWN)
                                     {
-                                        dp=-1;
+                                        dice_position=-1;
                                         glutIdleFunc(spindDisplay);
                                         printf("%d$$",numplayers);
                                         if(numplayers==0)
@@ -583,7 +629,7 @@ void mouse (int button, int state, int x, int y)            //mouse function...
                                     break;
         case GLUT_RIGHT_BUTTON  :   if(state == GLUT_DOWN)
                                     {
-                                        dp=2;
+                                        dice_position=2;
                                         glutIdleFunc(diceposition);
                                         pc_counter++;
                                         gameplay();
