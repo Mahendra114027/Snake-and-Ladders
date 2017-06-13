@@ -31,14 +31,14 @@ int dice[4];                      //Stores dice values of players
 int numplayers=0;                 //Stores number of players
 int pc_counter=1;                 //Stores chances condition factor
 int set_pointer=0;                //Set program counter
-int select_flag=0;				        //Stores the user specified no. of players
+int select_flag=0;				        //Stores user specified no. of players
 int snake_pos[101];               //Stores snake heads in the mesh
 int stair_pos[101];               //Stores ladders bottom in the mesh
 int dice_position=-1;             //Stores the dice movement
-float start[4]={-70};             //Start positions of the players
 int player_sum[4]={0};            //Stores the current
 float dice_dimension=50;          //Stores the dice
 int player_flag[4]={1,0,0,0};     //Stores the player which has current chance
+float start[4]={-70,-70,-70,-70}; //Start positions of the players
 float right_movement[4]={0};      //Monitors player position horizontally
 float up_movement[4]={0};         //Monitors player position vertically
 
@@ -572,12 +572,13 @@ void drawMesh()
 int generate_num()
 {
     int chancenum,dicenum;
-    chancenum=rand()%6;
+    chancenum=rand()%7;
+
     if(chancenum==0)
         dicenum=generate_num();
     else
         dicenum=chancenum;
-    printf("dicenum:%d\n",dicenum);
+    printf("dicenum : %d\n",dicenum);
     return dicenum;
 }
 
@@ -769,7 +770,7 @@ void gameplay()
 
         if(start[((pc_counter)%numplayers)]==-70)
         {
-            if(dice[((pc_counter)%numplayers)]==6)
+            if(dice[((pc_counter)%numplayers)]==6 || dice[((pc_counter)%numplayers)]==1)
             {
                 start[((pc_counter)%numplayers)]=0;
                 player_flag[((pc_counter)%numplayers)]=0;
