@@ -144,9 +144,11 @@ void mouse(int button, int state, int x, int y);
 
 int main(int argc, char *argv[])
 {
+	int n=0;
     //loading image to memory
-      loadImage("logo.png",1);
-      loadImage("board.png",0);
+      loadImage("logo.png",n);	n=1;
+      loadImage("board.png",n);	n=11;
+      loadImage("dice1.png",n);
 
     //generating textures
       glGenTextures(1, &texname);
@@ -345,7 +347,7 @@ void loadImage(const char* name,int n)
 {
     //use lodepng decode to decode image
     int error;
-    if(n)
+    if(n==0)
     {
             if((error=lodepng::decode(image_logo,logowidth,logoheight,name)))
             {
@@ -357,7 +359,7 @@ void loadImage(const char* name,int n)
                 cout<<"\n Logo Image Loaded Successfully\n";
             }
     }
-    else
+    else if(n==1)
     {
             if((error=lodepng::decode(image_board,boardwidth,boardheight,name)))
             {
@@ -368,20 +370,19 @@ void loadImage(const char* name,int n)
             {
                 invert(image_board,boardwidth,boardheight);
                 cout<<"\n Board Image Loaded Successfully\n";
-
-                if(n=11)
-                {
-	                if((error=lodepng::decode(image_dice1,dice1width,dice1height,name)))
-	            	{
-	                	cout<<name<<":"<<lodepng_error_text(error)<<endl;
-	            	}
-	            	else
-	            	{
-	             	  	invert(image_dice1,dice1width,dice1height);
-	               		cout<<"\n Logo Image Loaded Successfully\n";
-	            	}
-	            }
             }
+    }
+    else if(n=11)
+    {
+        if((error=lodepng::decode(image_dice1,dice1width,dice1height,name)))
+    	{
+        	cout<<name<<":"<<lodepng_error_text(error)<<endl;
+    	}
+    	else
+    	{
+     	  	invert(image_dice1,dice1width,dice1height);
+       		cout<<"\n Dice1 Image Loaded Successfully\n";
+    	}
     }
 
 }
@@ -625,7 +626,7 @@ void drawplayer()
 	int pi=3.14;
 	float theta=0,radius=25;
     glPointSize(200.0);
-    
+
 	//Player 1
     glColor3f(1.0,0.0,1.0);
     glBegin(GL_POLYGON);
@@ -847,8 +848,24 @@ void diceposition()
                         if(dice[0]==3)  {glColor3f(0.0,1.0,1.0);}
                         if(dice[0]==4)  {glColor3f(1.0,0.0,0.0);}
                         if(dice[0]==5)  {glColor3f(0.0,0.0,1.0);}
-                        if(dice[0]==6)  {glColor3f(1.0,1.0,0.0);}
-    }
+                        if(dice[0]==6)
+                        {
+                          	glMatrixMode(GL_MODELVIEW);
+						    glLoadIdentity();
+						    glEnable(GL_TEXTURE_2D);
+						    setTexture(image_dice1,dice1width,dice1height);
+						    glPushMatrix();
+						    glTranslatef(900,80,0);
+						    glScalef(0.9,1,1);
+						    glBegin(GL_POLYGON);
+						        glTexCoord2d(0,0);  glVertex2f(60,-60);
+						        glTexCoord2d(0,1);  glVertex2f(60,60);
+						        glTexCoord2d(1,1);  glVertex2f(-60,60);
+						        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+						    glEnd();
+						    glPopMatrix();
+						    glDisable(GL_TEXTURE_2D);}
+    					}
 
     //Player 2
     if((pc_counter%numplayers)==1)
