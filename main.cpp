@@ -1,5 +1,6 @@
 /*****    Header Files required in the program   *****/
 
+//Glut required header files
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #include <GLUT/glext.h>
@@ -8,13 +9,17 @@
 #include <GL/glext.h>
 #endif
 
-#include<stdio.h>
+//Other header files 
 #include <stdlib.h>
+#include<math.h>
+#include<stdio.h>
 #include <iostream>
 #include <vector>
+
+//Library files to load image
 #include "lodepng/lodepng.h"
 #include "lodepng/lodepng.cpp"
-#include<math.h>
+
 
 using namespace std;
 
@@ -45,12 +50,12 @@ float up_movement[4]={0};         //Monitors player position vertically
 /*****    Image renderring declarations   *****/
 
 //Viewport and Window required variables
-int pixelwidth=700;
-int pixelheight=850;
+int pixelwidth=700;						//Mesh Width
+int pixelheight=850;					//Mesh Height
 int WIDTH=500;
 int HEIGHT=500;
 
-// storage for image(pixel array)
+//Declarations for storage for images
 
 //Logo image and attributes
 vector <unsigned char> image_logo;
@@ -127,6 +132,7 @@ void check_ladder();
 void check_snake();
 
 /***** Glut functions with changed definitions    *****/
+
 static void init(void);
 static void idle(void);
 static void display(void);
@@ -135,6 +141,7 @@ static void specialkeys(int key,int x,int y);
 void mouse(int button, int state, int x, int y);
 
 /*****    Main Function   *****/
+
 int main(int argc, char *argv[])
 {
     //loading image to memory
@@ -176,6 +183,7 @@ int main(int argc, char *argv[])
 
 /*****    Glut functions and their user defined definitions   *****/
 
+//Initialisation for the program
 static void init(void)
 {
     glClearColor(0.0,0.0,0.0,0.0);
@@ -187,6 +195,7 @@ static void init(void)
     glLoadIdentity() ;
 }
 
+//Display Control of the Window and content
 static void display(void)
 {
     if(!window2)
@@ -197,22 +206,24 @@ static void display(void)
         windowThree();
 }
 
+//Control Passing medium for the Windows
 static void key(unsigned char key,int x,int y)
 {
-    if(key=='q' || key=='Q' || key==27)
+    if(key=='q' || key=='Q' || key==27)		//To Exit Code
     {
         exit(1);
     }
-    else if(key==13)
+    else if(key==13)						//Enter to select no. of players
     {
         window2=true;
     }
-    else if(key=='p' || key=='P')
+    else if(key=='p' || key=='P')			//To play the game
     {
         window3=true;
     }
 }
 
+//To input no. of players
 static void specialkeys(int key,int x,int y)
 {
     if(key==GLUT_KEY_RIGHT)
@@ -226,16 +237,19 @@ static void specialkeys(int key,int x,int y)
             select_flag=2;
     }
     numplayers=select_flag+2;
-         printf("nop:%d\n",numplayers);
-    printf("select_flag:%d\n",select_flag);
+
+    printf("\n No. of Players : %d\n",numplayers);
+    printf(" select_flag : %d\n",select_flag);
 }
 
+//Idle Function when no changes are made in buffer
 static void idle(void)
 {
     glutPostRedisplay();
 }
 
-void mouse (int button, int state, int x, int y)            //mouse function...
+//Left Click for Spinning the Die and Right Click for Stopping the Die
+void mouse (int button, int state, int x, int y)           
 {
     switch(button)
     {
@@ -243,11 +257,12 @@ void mouse (int button, int state, int x, int y)            //mouse function...
                                     {
                                         dice_position=-1;
                                         glutIdleFunc(spinDice);
-                                        printf("%d$$",numplayers);
+
                                         if(numplayers==0)
                                         {
                                             numplayers=2;
                                         }
+
                                         if(set_pointer==0)
                                         {
                                             pc_counter=(numplayers-1);
@@ -255,6 +270,7 @@ void mouse (int button, int state, int x, int y)            //mouse function...
                                         }
                                     }
                                     break;
+
         case GLUT_RIGHT_BUTTON  :   if(state == GLUT_DOWN)
                                     {
                                         dice_position=2;
@@ -263,6 +279,7 @@ void mouse (int button, int state, int x, int y)            //mouse function...
                                         gameplay();
                                     }
                                     break;
+
         default                 :   break;
     }
 }
@@ -335,7 +352,10 @@ void loadImage(const char* name,int n)
                 cout<<name<<":"<<lodepng_error_text(error)<<endl;
             }
             else
+            {
                 invert(image_logo,logowidth,logoheight);
+                cout<<"\n Logo Image Loaded Successfully\n";
+            }
     }
     else
     {
@@ -345,7 +365,23 @@ void loadImage(const char* name,int n)
                 exit(1);
             }
             else
+            {
                 invert(image_board,boardwidth,boardheight);
+                cout<<"\n Board Image Loaded Successfully\n";
+
+                if(n=11)
+                {
+	                if((error=lodepng::decode(image_dice1,dice1width,dice1height,name)))
+	            	{
+	                	cout<<name<<":"<<lodepng_error_text(error)<<endl;
+	            	}
+	            	else
+	            	{
+	             	  	invert(image_dice1,dice1width,dice1height);
+	               		cout<<"\n Logo Image Loaded Successfully\n";
+	            	}
+	            }
+            }
     }
 
 }
@@ -354,7 +390,7 @@ void loadImage(const char* name,int n)
 
 void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 {
-      int i;
+     int i;
 	 glPushMatrix();
 	 glTranslatef(x, y,z);
 	 glScalef(p1,p2,z);
@@ -529,15 +565,16 @@ void windowTwo()
         drawStrokeText("1. Objective of the game is to get to the number 100 which is the final destination.",0,ypos-250,0,fontsize,fontsize);
         drawStrokeText("2. Each player puts their counter on the space near the arrow mark.",0,ypos-300,0,fontsize,fontsize);
         drawStrokeText("3. Take it in turns to play the dice. Counter forwards to the number of spaces shown on the dice.",0,ypos-350,0,fontsize,fontsize);
-        drawStrokeText("4. If your counter lands at the bottom of a ladder, you can move up to the top of the ladder.",0,ypos-400,0,fontsize,fontsize);
-        drawStrokeText("5. If your counter lands on the head of a snake, you must slide down to the bottom of the snake.",0,ypos-450,0,fontsize,fontsize);
-        drawStrokeText("6. The first player to get to the space that says '100' is the winner.",0,ypos-500,0,fontsize,fontsize);
+        drawStrokeText("4. Left Click starts the dice roll and Right Click stops the dice.",0,ypos-400,0,fontsize,fontsize);
+        drawStrokeText("5. If your counter lands at the bottom of a ladder, you can move up to the top of the ladder.",0,ypos-450,0,fontsize,fontsize);
+        drawStrokeText("6. If your counter lands on the head of a snake, you must slide down to the bottom of the snake.",0,ypos-500,0,fontsize,fontsize);
+        drawStrokeText("7. The first player to get to the space that says '100' is the winner.",0,ypos-550,0,fontsize,fontsize);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(xtrans,ytrans,0);
     glColor3f(1.000, 0.843, 0.000);
-        drawStrokeText("Press P to Play.                  Press Q to Quit.",xpos*1.2,ypos-650,0,fontsize+0.03,fontsize+0.03);
+        drawStrokeText("Press P to Play.                  Press Q to Quit.",xpos*1.1,ypos-750,0,fontsize+0.03,fontsize+0.03);
     glPopMatrix();
 
     glFlush();
@@ -585,48 +622,59 @@ int generate_num()
 //Function to draw Players
 void drawplayer()
 {
+	int pi=3.14;
+	float theta=0,radius=25;
     glPointSize(200.0);
-        glColor3f(1.0,0.0,1.0);
-        glBegin(GL_POLYGON);
-        int pi=3.14;
-        float theta=0,radius=25;
-        for(int i=0;i<360;i++){
+    
+	//Player 1
+    glColor3f(1.0,0.0,1.0);
+    glBegin(GL_POLYGON);
+
+        for(int i=0;i<360;i++)
+        {
             glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[0]+start[0],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[0],-100);
-
             theta=theta+1;
         }
-        glEnd();
+    glEnd();
 
-                glPointSize(200.0);
-        glColor3f(0.0,0.0,1.0);
-        glBegin(GL_POLYGON);
+    //Player 2
+    glPointSize(200.0);
+    glColor3f(0.0,0.0,1.0);
+    glBegin(GL_POLYGON);
 
-        for(int i=0;i<360;i++){
+        for(int i=0;i<360;i++)
+        {
             glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[1]+start[1],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[1],-100);
-
             theta=theta+1;
         }
-        glEnd();
-         glPointSize(200.0);
-        glColor3f(0.0,1.0,0.0);
-        glBegin(GL_POLYGON);
 
-        for(int i=0;i<360;i++){
+    glEnd();
+
+    //Player 3
+    glPointSize(200.0);
+    glColor3f(0.0,1.0,0.0);
+    glBegin(GL_POLYGON);
+
+        for(int i=0;i<360;i++)
+        {
             glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[2]+start[2],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[2],-100);
-
             theta=theta+1;
         }
-        glEnd();
-         glPointSize(200.0);
-        glColor3f(1.0,0.0,0.0);
-        glBegin(GL_POLYGON);
 
-        for(int i=0;i<360;i++){
+    glEnd();
+
+    //Player 4
+    glPointSize(200.0);
+    glColor3f(1.0,0.0,0.0);
+    glBegin(GL_POLYGON);
+    
+        for(int i=0;i<360;i++)
+        {
             glVertex3f((radius*cos((pi/(float)180)*theta))+35+right_movement[3]+start[3],(radius*sin((pi/(float)180)*theta))+42.5+up_movement[3],-100);
-
-            theta=theta+1;
+		    theta=theta+1;
         }
-        glEnd();
+
+    glEnd();
 }
 
 //Function to Draw Dice
