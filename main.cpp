@@ -148,7 +148,12 @@ int main(int argc, char *argv[])
     //loading image to memory
       loadImage("logo.png",n);	n=1;
       loadImage("board.png",n);	n=11;
-      loadImage("dice1.png",n);
+      loadImage("dice1.png",n);	n=12;
+      loadImage("dice2.png",n);	n=13;
+      loadImage("dice3.png",n);	n=14;
+      loadImage("dice4.png",n);	n=15;
+      loadImage("dice5.png",n);	n=16;
+      loadImage("dice6.png",n);
 
     //generating textures
       glGenTextures(1, &texname);
@@ -380,11 +385,70 @@ void loadImage(const char* name,int n)
     	}
     	else
     	{
-     	  	invert(image_dice1,dice1width,dice1height);
+     	  	invert(image_dice6,dice6width,dice6height);
        		cout<<"\n Dice1 Image Loaded Successfully\n";
     	}
     }
-
+    else if(n=12)
+    {
+        if((error=lodepng::decode(image_dice2,dice2width,dice2height,name)))
+    	{
+        	cout<<name<<":"<<lodepng_error_text(error)<<endl;
+    	}
+    	else
+    	{
+     	  	invert(image_dice2,dice2width,dice2height);
+       		cout<<"\n Dice2 Image Loaded Successfully\n";
+    	}
+    }
+    else if(n=13)
+    {
+        if((error=lodepng::decode(image_dice3,dice3width,dice3height,name)))
+    	{
+        	cout<<name<<":"<<lodepng_error_text(error)<<endl;
+    	}
+    	else
+    	{
+     	  	invert(image_dice3,dice3width,dice3height);
+       		cout<<"\n Dice3 Image Loaded Successfully\n";
+    	}
+    }
+    else if(n=14)
+    {
+        if((error=lodepng::decode(image_dice4,dice4width,dice4height,name)))
+    	{
+        	cout<<name<<":"<<lodepng_error_text(error)<<endl;
+    	}
+    	else
+    	{
+     	  	invert(image_dice4,dice4width,dice4height);
+       		cout<<"\n Dice4 Image Loaded Successfully\n";
+    	}
+    }
+    else if(n=15)
+    {
+        if((error=lodepng::decode(image_dice5,dice5width,dice5height,name)))
+    	{
+        	cout<<name<<":"<<lodepng_error_text(error)<<endl;
+    	}
+    	else
+    	{
+     	  	invert(image_dice5,dice5width,dice5height);
+       		cout<<"\n Dice5 Image Loaded Successfully\n";
+    	}
+    }
+    else if(n=16)
+    {
+        if((error=lodepng::decode(image_dice6,dice6width,dice6height,name)))
+    	{
+        	cout<<name<<":"<<lodepng_error_text(error)<<endl;
+    	}
+    	else
+    	{
+     	  	invert(image_dice6,dice6width,dice6height);
+       		cout<<"\n Dice6 Image Loaded Successfully\n";
+    	}
+    }
 }
 
 /*****    Stroke Drawing    *****/
@@ -843,70 +907,462 @@ void diceposition()
     //Player 1
     if((pc_counter%numplayers)==0)
     {
-                        if(dice[0]==1)  {glColor3f(1.0,0.0,1.0);}
-                        if(dice[0]==2)  {glColor3f(0.0,1.0,0.0);}
-                        if(dice[0]==3)  {glColor3f(0.0,1.0,1.0);}
-                        if(dice[0]==4)  {glColor3f(1.0,0.0,0.0);}
-                        if(dice[0]==5)  {glColor3f(0.0,0.0,1.0);}
-                        if(dice[0]==6)
-                        {
-                          	glMatrixMode(GL_MODELVIEW);
-						    glLoadIdentity();
-						    glEnable(GL_TEXTURE_2D);
-						    setTexture(image_dice1,dice1width,dice1height);
-						    glPushMatrix();
-						    glTranslatef(900,80,0);
-						    glScalef(0.9,1,1);
-						    glBegin(GL_POLYGON);
-						        glTexCoord2d(0,0);  glVertex2f(60,-60);
-						        glTexCoord2d(0,1);  glVertex2f(60,60);
-						        glTexCoord2d(1,1);  glVertex2f(-60,60);
-						        glTexCoord2d(1,0);  glVertex2f(-60,-60);
-						    glEnd();
-						    glPopMatrix();
-						    glDisable(GL_TEXTURE_2D);}
-    					}
+        if(dice[0]==1)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice1,dice1width,dice1height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+		}
+        if(dice[0]==2)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice2,dice2width,dice2height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==3)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice3,dice3width,dice3height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==4)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice4,dice4width,dice4height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==5)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice5,dice5width,dice5height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==6)
+        {
+          	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice6,dice6width,dice6height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+		}
+    }
 
     //Player 2
     if((pc_counter%numplayers)==1)
     {
-                        if(dice[1]==1)  {glColor3f(1.0,0.0,1.0);}
-                        if(dice[1]==2)  {glColor3f(0.0,1.0,0.0);}
-                        if(dice[1]==3)  {glColor3f(0.0,1.0,1.0);}
-                        if(dice[1]==4)  {glColor3f(1.0,0.0,0.0);}
-                        if(dice[1]==5)  {glColor3f(0.0,0.0,1.0);}
-                        if(dice[1]==6)  {glColor3f(1.0,1.0,0.0);}
+        if(dice[0]==1)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice1,dice1width,dice1height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+		}
+        if(dice[0]==2)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice2,dice2width,dice2height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==3)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice3,dice3width,dice3height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==4)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice4,dice4width,dice4height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==5)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice5,dice5width,dice5height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==6)
+        {
+          	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice6,dice6width,dice6height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+		}
     }
 
     //Player 3
     if((pc_counter%numplayers)==2)
     {
-                        if(dice[2]==1)  {glColor3f(1.0,0.0,1.0);}
-                        if(dice[2]==2)  {glColor3f(0.0,1.0,0.0);}
-                        if(dice[2]==3)  {glColor3f(0.0,1.0,1.0);}
-                        if(dice[2]==4)  {glColor3f(1.0,0.0,0.0);}
-                        if(dice[2]==5)  {glColor3f(0.0,0.0,1.0);}
-                        if(dice[2]==6)  {glColor3f(1.0,1.0,0.0);}
+        if(dice[0]==1)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice1,dice1width,dice1height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+		}
+        if(dice[0]==2)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice2,dice2width,dice2height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==3)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice3,dice3width,dice3height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==4)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice4,dice4width,dice4height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==5)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice5,dice5width,dice5height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==6)
+        {
+          	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice6,dice6width,dice6height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+		}
     }
 
     //Player 4
     if((pc_counter%numplayers)==3)
     {
-                        if(dice[3]==1)  {glColor3f(1.0,0.0,1.0);}
-                        if(dice[3]==2)  {glColor3f(0.0,1.0,0.0);}
-                        if(dice[3]==3)  {glColor3f(0.0,1.0,1.0);}
-                        if(dice[3]==4)  {glColor3f(1.0,0.0,0.0);}
-                        if(dice[3]==5)  {glColor3f(0.0,0.0,1.0);}
-                        if(dice[3]==6)  {glColor3f(1.0,1.0,0.0);}
+        if(dice[0]==1)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice1,dice1width,dice1height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+		}
+        if(dice[0]==2)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice2,dice2width,dice2height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==3)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice3,dice3width,dice3height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==4)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice4,dice4width,dice4height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==5)  
+        {
+        	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice5,dice5width,dice5height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+        }
+        if(dice[0]==6)
+        {
+          	glMatrixMode(GL_MODELVIEW);
+		    glLoadIdentity();
+		    glEnable(GL_TEXTURE_2D);
+		    setTexture(image_dice6,dice6width,dice6height);
+		    glPushMatrix();
+		    glTranslatef(900,80,0);
+		    glScalef(0.9,1,1);
+		    glBegin(GL_POLYGON);
+		        glTexCoord2d(0,0);  glVertex2f(60,-60);
+		        glTexCoord2d(0,1);  glVertex2f(60,60);
+		        glTexCoord2d(1,1);  glVertex2f(-60,60);
+		        glTexCoord2d(1,0);  glVertex2f(-60,-60);
+		    glEnd();
+		    glPopMatrix();
+		    glDisable(GL_TEXTURE_2D);
+		}
     }
 
 
-    glBegin(GL_QUADS);
-      glVertex3f(60,-60,50);
-      glVertex3f(60,60,50);
-      glVertex3f(-60,60,50);
-      glVertex3f(-60,-60,50);
-    glEnd();
+    // glBegin(GL_QUADS);
+    //   glVertex3f(60,-60,50);
+    //   glVertex3f(60,60,50);
+    //   glVertex3f(-60,60,50);
+    //   glVertex3f(-60,-60,50);
+    // glEnd();
 
 }
 
