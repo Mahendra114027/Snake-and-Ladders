@@ -31,12 +31,14 @@ int windowHeight;
 bool window1=false,window2=false,window3=false;
 
 //Variables used for gameplay
+int n=0;						  //Stores the image loading flag
 float spin;                       //Stores spinning factor of the cube
 int dice[4];                      //Stores dice values of players
+int dicenum;					  //Stores Dice Value
 int numplayers=0;                 //Stores number of players
 int pc_counter=1;                 //Stores chances condition factor
 int set_pointer=0;                //Set program counter
-int select_flag=0;				        //Stores user specified no. of players
+int select_flag=0;				  //Stores user specified no. of players
 int snake_pos[101];               //Stores snake heads in the mesh
 int stair_pos[101];               //Stores ladders bottom in the mesh
 int dice_position=-1;             //Stores the dice movement
@@ -127,6 +129,7 @@ void drawplayer();
 void drawdice();
 void spinDice();
 void gameplay();
+void diceimages();
 void diceposition();
 void check_ladder();
 void check_snake();
@@ -144,17 +147,10 @@ void mouse(int button, int state, int x, int y);
 
 int main(int argc, char *argv[])
 {
-	int n=0;
     //loading image to memory
       loadImage("logo.png",n);	n=1;
-      loadImage("board.png",n);	n=11;
-      loadImage("dice1.png",n);	n=12;
-      loadImage("dice2.png",n);	n=13;
-      loadImage("dice3.png",n);	n=14;
-      loadImage("dice4.png",n);	n=15;
-      loadImage("dice5.png",n);	n=16;
-      loadImage("dice6.png",n);
-
+      loadImage("board.png",n);	
+      
     //generating textures
       glGenTextures(1, &texname);
 
@@ -377,7 +373,7 @@ void loadImage(const char* name,int n)
                 cout<<"\n Board Image Loaded Successfully\n";
             }
     }
-    else if(n=11)
+    else if(n==11)
     {
         if((error=lodepng::decode(image_dice1,dice1width,dice1height,name)))
     	{
@@ -385,11 +381,11 @@ void loadImage(const char* name,int n)
     	}
     	else
     	{
-     	  	invert(image_dice6,dice6width,dice6height);
+     	  	invert(image_dice1,dice1width,dice1height);
        		cout<<"\n Dice1 Image Loaded Successfully\n";
     	}
     }
-    else if(n=12)
+    else if(n==12)
     {
         if((error=lodepng::decode(image_dice2,dice2width,dice2height,name)))
     	{
@@ -401,7 +397,7 @@ void loadImage(const char* name,int n)
        		cout<<"\n Dice2 Image Loaded Successfully\n";
     	}
     }
-    else if(n=13)
+    else if(n==13)
     {
         if((error=lodepng::decode(image_dice3,dice3width,dice3height,name)))
     	{
@@ -413,7 +409,7 @@ void loadImage(const char* name,int n)
        		cout<<"\n Dice3 Image Loaded Successfully\n";
     	}
     }
-    else if(n=14)
+    else if(n==14)
     {
         if((error=lodepng::decode(image_dice4,dice4width,dice4height,name)))
     	{
@@ -425,7 +421,7 @@ void loadImage(const char* name,int n)
        		cout<<"\n Dice4 Image Loaded Successfully\n";
     	}
     }
-    else if(n=15)
+    else if(n==15)
     {
         if((error=lodepng::decode(image_dice5,dice5width,dice5height,name)))
     	{
@@ -437,7 +433,7 @@ void loadImage(const char* name,int n)
        		cout<<"\n Dice5 Image Loaded Successfully\n";
     	}
     }
-    else if(n=16)
+    else if(n==16)
     {
         if((error=lodepng::decode(image_dice6,dice6width,dice6height,name)))
     	{
@@ -673,7 +669,7 @@ void drawMesh()
 //Function to generate dice number
 int generate_num()
 {
-    int chancenum,dicenum;
+	int chancenum;
     chancenum=rand()%7;
 
     if(chancenum==0)
@@ -899,6 +895,45 @@ void gameplay()
     }
 }
 
+void diceimages()
+{
+	if(dicenum==1)
+	{
+		n=11;
+		loadImage("dice1.png",n);	
+	}
+	
+	if(dicenum==2)
+	{
+		n=12;
+		loadImage("dice2.png",n);
+	}	
+
+	if(dicenum==3)
+	{
+		n=13;
+		loadImage("dice3.png",n);
+	}
+
+	if(dicenum==4)
+	{
+		n=14;
+		loadImage("dice4.png",n);
+	}	
+
+	if(dicenum==5)
+	{
+		n=15;
+		loadImage("dice5.png",n);	
+	}
+    
+    if(dicenum==6)
+    {
+    	n=16;
+    	loadImage("dice6.png",n);
+    }	
+}
+
 //Function to show dice face
 void diceposition()
 {
@@ -1020,7 +1055,7 @@ void diceposition()
     //Player 2
     if((pc_counter%numplayers)==1)
     {
-        if(dice[0]==1)  
+        if(dice[1]==1)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1038,7 +1073,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
 		}
-        if(dice[0]==2)  
+        if(dice[1]==2)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1056,7 +1091,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==3)  
+        if(dice[1]==3)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1074,7 +1109,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==4)  
+        if(dice[1]==4)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1092,7 +1127,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==5)  
+        if(dice[1]==5)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1110,7 +1145,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==6)
+        if(dice[1]==6)
         {
           	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1133,7 +1168,7 @@ void diceposition()
     //Player 3
     if((pc_counter%numplayers)==2)
     {
-        if(dice[0]==1)  
+        if(dice[2]==1)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1151,7 +1186,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
 		}
-        if(dice[0]==2)  
+        if(dice[2]==2)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1169,7 +1204,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==3)  
+        if(dice[2]==3)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1187,7 +1222,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==4)  
+        if(dice[2]==4)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1205,7 +1240,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==5)  
+        if(dice[2]==5)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1223,7 +1258,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==6)
+        if(dice[2]==6)
         {
           	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1246,7 +1281,7 @@ void diceposition()
     //Player 4
     if((pc_counter%numplayers)==3)
     {
-        if(dice[0]==1)  
+        if(dice[3]==1)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1264,7 +1299,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
 		}
-        if(dice[0]==2)  
+        if(dice[3]==2)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1282,7 +1317,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==3)  
+        if(dice[3]==3)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1300,7 +1335,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==4)  
+        if(dice[3]==4)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1318,7 +1353,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==5)  
+        if(dice[3]==5)  
         {
         	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1336,7 +1371,7 @@ void diceposition()
 		    glPopMatrix();
 		    glDisable(GL_TEXTURE_2D);
         }
-        if(dice[0]==6)
+        if(dice[3]==6)
         {
           	glMatrixMode(GL_MODELVIEW);
 		    glLoadIdentity();
@@ -1355,15 +1390,6 @@ void diceposition()
 		    glDisable(GL_TEXTURE_2D);
 		}
     }
-
-
-    // glBegin(GL_QUADS);
-    //   glVertex3f(60,-60,50);
-    //   glVertex3f(60,60,50);
-    //   glVertex3f(-60,60,50);
-    //   glVertex3f(-60,-60,50);
-    // glEnd();
-
 }
 
 //Display function for Window Three
@@ -1389,6 +1415,7 @@ void windowThree()
 
     drawMesh();
     drawplayer();
+    diceimages();
 
     glPushMatrix();
         glTranslatef(900.0,200.0,0.0);
