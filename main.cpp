@@ -949,7 +949,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice1,dice1width,dice1height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -967,7 +967,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice2,dice2width,dice2height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -985,7 +985,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice3,dice3width,dice3height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1003,7 +1003,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice4,dice4width,dice4height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1021,7 +1021,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice5,dice5width,dice5height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1039,7 +1039,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice6,dice6width,dice6height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1062,7 +1062,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice1,dice1width,dice1height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1080,7 +1080,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice2,dice2width,dice2height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1098,7 +1098,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice3,dice3width,dice3height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1116,7 +1116,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice4,dice4width,dice4height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1134,7 +1134,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice5,dice5width,dice5height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1152,7 +1152,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice6,dice6width,dice6height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1175,7 +1175,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice1,dice1width,dice1height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1193,7 +1193,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice2,dice2width,dice2height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1211,7 +1211,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice3,dice3width,dice3height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1229,7 +1229,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice4,dice4width,dice4height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1247,7 +1247,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice5,dice5width,dice5height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1265,7 +1265,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice6,dice6width,dice6height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1288,7 +1288,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice1,dice1width,dice1height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1306,7 +1306,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice2,dice2width,dice2height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1324,7 +1324,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice3,dice3width,dice3height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1342,7 +1342,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice4,dice4width,dice4height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1360,7 +1360,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice5,dice5width,dice5height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1378,7 +1378,7 @@ void diceposition()
 		    glEnable(GL_TEXTURE_2D);
 		    setTexture(image_dice6,dice6width,dice6height);
 		    glPushMatrix();
-		    glTranslatef(900,80,0);
+		    glTranslatef(850,200,0);
 		    glScalef(0.9,1,1);
 		    glBegin(GL_POLYGON);
 		        glTexCoord2d(0,0);  glVertex2f(60,-60);
@@ -1417,7 +1417,17 @@ void windowThree()
     drawplayer();
     diceimages();
 
-    glPushMatrix();
+    /*float ypos=windowHeight*3/4;
+    if(player_flag[0]==1)
+		drawStrokeText("Player 1's Turn",850,ypos+150,0,0.13,0.13);
+	else if(player_flag[1]==1)
+		drawStrokeText("Player 2's Turn",850,ypos+150,0,0.13,0.13);
+	else if(player_flag[2]==1)
+		drawStrokeText("Player 3's Turn",850,ypos+150,0,0.13,0.13);
+	else if(player_flag[3]==1)
+		drawStrokeText("Player 4's Turn",850,ypos+150,0,0.13,0.13);*/
+
+    glPushMatrix();  
         glTranslatef(900.0,200.0,0.0);
         glRotatef(spin, 1.0, 0.5, 1.0);
         if(dice_position<0)
