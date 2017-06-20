@@ -28,18 +28,21 @@ using namespace std;
 //Variables used for Window transitions and renderring
 int windowWidth;
 int windowHeight;
-bool window1=false,window2=false,window3=false,window4=false;
+bool window1=false;
+bool window2=false;
+bool window3=false;
+
 
 //Variables used for gameplay
-int n=0;						  //Stores the image loading flag
+int n=0;			  //Stores the image loading flag
 float spin;                       //Stores spinning factor of the cube
 int winner;						  //Stores the Winning player
 int dice[4];                      //Stores dice values of players
-int dicenum;					  //Stores Dice Value
+int dicenum;			  //Stores Dice Value
 int numplayers=0;                 //Stores number of players
 int pc_counter=1;                 //Stores chances condition factor
 int set_pointer=0;                //Set program counter
-int select_flag=0;				  //Stores user specified no. of players
+int select_flag=0;		  //Stores user specified no. of players
 int snake_pos[101];               //Stores snake heads in the mesh
 int stair_pos[101];               //Stores ladders bottom in the mesh
 int dice_position=-1;             //Stores the dice movement
@@ -53,7 +56,7 @@ float up_movement[4]={0};         //Monitors player position vertically
 /*****    Image renderring declarations   *****/
 
 //Viewport and Window required variables
-int pixelwidth=700;						//Mesh Width
+int pixelwidth=700;					//Mesh Width
 int pixelheight=850;					//Mesh Height
 int WIDTH=500;
 int HEIGHT=500;
