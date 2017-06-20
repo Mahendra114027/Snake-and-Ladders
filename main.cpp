@@ -31,7 +31,7 @@ int windowHeight;
 bool window1=false;
 bool window2=false;
 bool window3=false;
-
+bool window4=false;
 
 //Variables used for gameplay
 int n=0;			  //Stores the image loading flag
@@ -41,6 +41,7 @@ int dice[4];                      //Stores dice values of players
 int dicenum;			  //Stores Dice Value
 int numplayers=0;                 //Stores number of players
 int pc_counter=1;                 //Stores chances condition factor
+void *currentfont;					//Stores font address
 int set_pointer=0;                //Set program counter
 int select_flag=0;		  //Stores user specified no. of players
 int snake_pos[101];               //Stores snake heads in the mesh
@@ -115,6 +116,8 @@ void loadImage(const char* name,int n);
 
 //For Stroke Drawing
 void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2);
+void setFont(void *font);
+void drawstring(float x,float y,char *str);
 
 /*****    Function prototypes for User defined functions    *****/
 
@@ -140,9 +143,7 @@ void check_snake();
 
 //Required for Fourth Window
 void windowFour();
-void *currentfont;
-void setFont(void *font);
-void drawstring(float x,float y,char *str);
+
 /***** Glut functions with changed definitions    *****/
 
 static void init(void);
@@ -460,6 +461,7 @@ void loadImage(const char* name,int n)
 
 /*****    Stroke Drawing    *****/
 
+//Drawing Strokes
 void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 {
      int i;
@@ -473,6 +475,23 @@ void drawStrokeText(const char str[250],int x,int y,int z,float p1,float p2)
 	 }
 	 glPopMatrix();
 }
+
+//Setting Font
+void setFont(void *font)
+{
+	currentfont = font;
+}
+
+//Drawing Strings
+void drawstring(float x,float y,char *str)
+{
+	char *c;
+	glRasterPos2f(x,y);
+	for(c=str;*c!='\0';c++)
+		glutBitmapCharacter(currentfont ,*c);
+
+}
+
 
 /*****    Game play user defined functions    *****/
 
@@ -835,9 +854,9 @@ void gameplay()
         if(( player_sum[((pc_counter)%numplayers)]+dice[1])<=100 && (start[((pc_counter)%numplayers)]==0))
         {
             player_sum[((pc_counter)%numplayers)]+=dice[((pc_counter)%numplayers)];
-            if(player_sum[((pc_counter)%numplayers)]==25)
+            if(player_sum[((pc_counter)%numplayers)]==100)
             {
-            	printf("Dukkar\n");
+            	printf("Winner decided\n");
             	window4=true;
             	winner=pc_counter%numplayers;
             }
@@ -1445,7 +1464,7 @@ void windowThree()
 		drawStrokeText("Player 4's Turn",850,ypos+150,0,0.13,0.13);*/
 
     glPushMatrix();  
-        glTranslatef(900.0,200.0,0.0);
+        glTranslatef(900.0,400.0,0.0);
         glRotatef(spin, 1.0, 0.5, 1.0);
         if(dice_position<0)
             drawdice();
@@ -1460,59 +1479,34 @@ void windowThree()
 
 void windowFour()
 {
+	int num=0;
+    num=(winner+1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClearColor(1.0,1.0,1.0,1.0);
+	
+	setFont(GLUT_BITMAP_HELVETICA_18);
+	char name[50]={"WINNER IS PLAYER --> "};
+	char buffer[10]={'\0'};
+	drawstring(500,500,name);
 
-	if(winner==0 || winner==1 || winner==2 || winner==3)
-    {	
-    	int num=0;
-    	num=(winner+1);
-		switch(winner)
-    	{
-    		case 0 : 	glColor3f(1.0,1.0,1.0);
-					    glBegin(GL_LINE_LOOP);
-					    	glVertex2f(480,400);
-					    	glVertex2f(700,400);
-					    	glVertex2f(700,600);
-					    	glVertex2f(480,600);
-						glEnd();
-						glPointSize(10.0);
+	glColor3f(1.0,1.0,1.0);
+    glBegin(GL_LINE_LOOP);
+    	glVertex2f(480,400);
+    	glVertex2f(700,400);
+    	glVertex2f(700,600);
+    	glVertex2f(480,600);
+	glEnd();
 
-						glColor3f(1.0,1.0,0.0);
+	glPointSize(10.0);
+	glColor3f(1.0,1.0,0.0);
+	sprintf(buffer,"%d",num);
+	drawstring(650,500,buffer);
 
-						setFont(GLUT_BITMAP_HELVETICA_18);
-						char name[20]={"PLAYER_WIN---"};
-						char buffer[10]={'\0'};
-
-						drawstring(500,500,name);
-
-						sprintf(buffer,"%d",num);
-						drawstring(650,500,buffer);
-
-					
-						
-						break;
-    	}
-    	glPopMatrix();
-    }
     glFlush();
     glutSwapBuffers();  
 
     
 }
 
-void setFont(void *font)
-{
-	currentfont = font;
-}
-
-void drawstring(float x,float y,char *str)
-{
-	char *c;
-	glRasterPos2f(x,y);
-	for(c=str;*c!='\0';c++)
-		glutBitmapCharacter(currentfont ,*c);
-
-}
 
 
