@@ -34,25 +34,25 @@ bool window3=false;
 bool window4=false;
 
 //Variables used for gameplay
-int n=0;			  //Stores the image loading flag
-float spin;                       //Stores spinning factor of the cube
-int winner;						  //Stores the Winning player
-int dice[4];                      //Stores dice values of players
-int dicenum;			  //Stores Dice Value
-int numplayers=0;                 //Stores number of players
-int pc_counter=1;                 //Stores chances condition factor
-void *currentfont;					//Stores font address
-int set_pointer=0;                //Set program counter
-int select_flag=0;		  //Stores user specified no. of players
-int snake_pos[101];               //Stores snake heads in the mesh
-int stair_pos[101];               //Stores ladders bottom in the mesh
-int dice_position=-1;             //Stores the dice movement
-int player_sum[4]={0};            //Stores the current
-float dice_dimension=50;          //Stores the dice
-int player_flag[4]={1,0,0,0};     //Stores the player which has current chance
-float start[4]={-70,-70,-70,-70}; //Start positions of the players
-float right_movement[4]={0};      //Monitors player position horizontally
-float up_movement[4]={0};         //Monitors player position vertically
+int n=0;			 	//Stores the image loading flag
+float spin;                       	//Stores spinning factor of the cube
+int winner;			  	//Stores the Winning player
+int dice[4];                      	//Stores dice values of players
+int dicenum;			  	//Stores Dice Value
+int numplayers=0;                 	//Stores number of players
+int pc_counter=1;                 	//Stores chances condition factor
+void *currentfont;		  	//Stores font address
+int set_pointer=0;                	//Set program counter
+int select_flag=0;		  	//Stores user specified no. of players
+int snake_pos[101];               	//Stores snake heads in the mesh
+int stair_pos[101];               	//Stores ladders bottom in the mesh
+int dice_position=-1;             	//Stores the dice movement
+int player_sum[4]={0};            	//Stores the current
+float dice_dimension=50;          	//Stores the dice
+int player_flag[4]={1,0,0,0};     	//Stores the player which has current chance
+float start[4]={-70,-70,-70,-70}; 	//Start positions of the players
+float right_movement[4]={0};      	//Monitors player position horizontally
+float up_movement[4]={0};         	//Monitors player position vertically
 
 /*****    Image renderring declarations   *****/
 
