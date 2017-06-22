@@ -251,9 +251,7 @@ static void specialkeys(int key,int x,int y)
         if(select_flag<0)
             select_flag=2;
     }
-    numplayers=select_flag+2;
 
-    printf("\n No. of Players : %d\n",numplayers);
     printf(" select_flag : %d\n",select_flag);
 }
 
@@ -272,11 +270,6 @@ void mouse (int button, int state, int x, int y)
                                     {
                                         dice_position=-1;
                                         glutIdleFunc(spinDice);
-
-                                        if(numplayers==0)
-                                        {
-                                            numplayers=2;
-                                        }
 
                                         if(set_pointer==0)
                                         {
@@ -560,6 +553,8 @@ void selectoptions()
             glVertex2f(cn-195,45.0);
         glEnd();
         glPopMatrix();
+        numplayers=select_flag+2;
+        printf("\n No. of Players : %d\n",numplayers);
     }
     else if(select_flag==1)
     {
@@ -574,6 +569,8 @@ void selectoptions()
             glVertex2f(cn+80,45.0);
         glEnd();
         glPopMatrix();
+        numplayers=select_flag+2;
+        printf("\n No. of Players : %d\n",numplayers);
     }
     else if(select_flag==2)
     {
@@ -588,6 +585,8 @@ void selectoptions()
             glVertex2f(cn+195,45.0);
         glEnd();
         glPopMatrix();
+        numplayers=select_flag+2;
+        printf("\n No. of Players : %d\n",numplayers);
     }
 
 }
@@ -851,10 +850,10 @@ void gameplay()
             player_flag[((pc_counter+1)%numplayers)]=1;
         }
 
-        if(( player_sum[((pc_counter)%numplayers)]+dice[1])<=100 && (start[((pc_counter)%numplayers)]==0))
+        if(( player_sum[((pc_counter)%numplayers)]+dice[((pc_counter)%numplayers)])<100 && (start[((pc_counter)%numplayers)]==0))
         {
             player_sum[((pc_counter)%numplayers)]+=dice[((pc_counter)%numplayers)];
-            if(player_sum[((pc_counter)%numplayers)]==100)
+            if(player_sum[((pc_counter)%numplayers)]==99)
             {
             	printf("Winner decided\n");
             	window4=true;
@@ -1452,16 +1451,27 @@ void windowThree()
     drawMesh();
     drawplayer();
     diceimages();
-   
-    /*float ypos=windowHeight*3/4;
-    if(player_flag[0]==1)
-		drawStrokeText("Player 1's Turn",850,ypos+150,0,0.13,0.13);
-	else if(player_flag[1]==1)
-		drawStrokeText("Player 2's Turn",850,ypos+150,0,0.13,0.13);
-	else if(player_flag[2]==1)
-		drawStrokeText("Player 3's Turn",850,ypos+150,0,0.13,0.13);
-	else if(player_flag[3]==1)
-		drawStrokeText("Player 4's Turn",850,ypos+150,0,0.13,0.13);*/
+
+
+
+    setFont(GLUT_BITMAP_HELVETICA_18);
+	char name[50]={" CHANCE OF PLAYER  -->   "};
+	char buffer[10]={'\0'};
+	drawstring(760,600,name);
+
+	glColor3f(1.0,1.0,1.0);
+    glBegin(GL_LINE_LOOP);
+    	glVertex2f(750,500);
+    	glVertex2f(970,500);
+    	glVertex2f(970,700);
+    	glVertex2f(750,700);
+	glEnd();
+
+	glPointSize(10.0);
+	glColor3f(1.0,1.0,0.0);
+	sprintf(buffer,"%d",(((pc_counter+1)%numplayers)+1));
+	drawstring(950,600,buffer);
+    
 
     glPushMatrix();  
         glTranslatef(900.0,400.0,0.0);
@@ -1482,12 +1492,11 @@ void windowFour()
 	int num=0;
     num=(winner+1);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(1.0,1.0,1.0,1.0);
 	
 	setFont(GLUT_BITMAP_HELVETICA_18);
-	char name[50]={"WINNER IS PLAYER --> "};
+	char name[50]={"WINNER IS PLAYER -->   "};
 	char buffer[10]={'\0'};
-	drawstring(500,500,name);
+	drawstring(510,500,name);
 
 	glColor3f(1.0,1.0,1.0);
     glBegin(GL_LINE_LOOP);
@@ -1500,7 +1509,7 @@ void windowFour()
 	glPointSize(10.0);
 	glColor3f(1.0,1.0,0.0);
 	sprintf(buffer,"%d",num);
-	drawstring(650,500,buffer);
+	drawstring(670,500,buffer);
 
     glFlush();
     glutSwapBuffers();  
