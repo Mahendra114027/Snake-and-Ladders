@@ -657,7 +657,7 @@ void windowTwo()
     glColor3f(0.0,0.8,1.0);
     glLineWidth(1.3);
         drawStrokeText("1. Objective of the game is to get to the number 100 which is the final destination.",0,ypos-250,0,fontsize,fontsize);
-        drawStrokeText("2. Each player puts their counter on the space near the arrow mark.Counter 1/6 starts gameplay.",0,ypos-300,0,fontsize,fontsize);
+        drawStrokeText("2. Each player puts their counter on the space near the arrow mark. Counter 1/6 starts gameplay.",0,ypos-300,0,fontsize,fontsize);
         drawStrokeText("3. Take it in turns to play the dice. Counter forwards to the number of spaces shown on the dice.",0,ypos-350,0,fontsize,fontsize);
         drawStrokeText("4. Left Click starts the dice roll and Right Click stops the dice.",0,ypos-400,0,fontsize,fontsize);
         drawStrokeText("5. If your counter lands at the bottom of a ladder, you can move up to the top of the ladder.",0,ypos-450,0,fontsize,fontsize);
