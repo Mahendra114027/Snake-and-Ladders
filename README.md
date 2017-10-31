@@ -3,8 +3,8 @@ This project demonstrates Indian board game which will be revamped using OpenGL 
 
 
 ### Screenshots
-![alt tag](Screenshots/1.jpg)
+![alt tag](Screenshots/1.png)
 
-![alt tag](Screenshots/2.jpg)
+![alt tag](Screenshots/2.png)
 
-![alt tag](Screenshots/3.jpg)
+![alt tag](Screenshots/3.png)
