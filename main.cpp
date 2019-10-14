@@ -18,7 +18,7 @@
 
 //Library files to load image
 #include "lodepng/lodepng.h"
-#include "lodepng/lodepng.cpp"
+//#include "lodepng/lodepng.cpp"
 
 
 using namespace std;
